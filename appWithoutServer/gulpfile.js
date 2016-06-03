@@ -6,7 +6,8 @@ var open = require('gulp-open'); // Open a URL in a web browser
 var browserify = require('browserify'); // Bundles JS and lets us use CommonJS pattern in browser
 var reactify = require('reactify'); // Transpiles JSX into JS
 var source = require('vinyl-source-stream'); // Use conventional text streams with Gulp
-var concat = require('gulp-concat');
+var concat = require('gulp-concat'); // Concatenates files together to make one file
+var lint = require('gulp-eslint');
 
 var config = {
   port: 9005,
@@ -64,11 +65,18 @@ gulp.task('js', function () {
     .pipe(connect.reload());
 });
 
+// Linting task
+gulp.task('lint', function () {
+  return gulp.src(config.paths.js)
+    .pipe(lint(1))
+    .pipe(lint.format());
+});
+
 // Watch all files on the html path and run the html task when they change
 gulp.task('watch', function () {
   gulp.watch(config.paths.html, ['html']);
-  gulp.watch(config.paths.js, ['js']);
+  gulp.watch(config.paths.js, ['js', 'lint']);
 });
 
 // Default task
-gulp.task('default', ['html', 'css', 'js', 'open', 'watch']);
+gulp.task('default', ['html', 'css', 'js', 'lint', 'open', 'watch']);
