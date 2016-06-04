@@ -51196,6 +51196,27 @@ module.exports = require('./lib/React');
 'use strict';
 
 var React = require('react');
+var Link = require('react-router').Link;
+
+
+var NotFoundPage = React.createClass({displayName: "NotFoundPage",
+  render: function () {
+    return (
+      React.createElement("div", null, 
+        React.createElement("h1", null, "Wow...this is embarrassing..."), 
+        React.createElement("p", null, "Nothing found, sorry about that"), 
+        React.createElement("p", null, React.createElement(Link, {to: "/"}, "Go back to home"))
+      )
+    );
+  }
+});
+
+module.exports = NotFoundPage;
+
+},{"react":230,"react-router":34}],232:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
 var Header = require('./common/Header');
 
 var App = React.createClass({displayName: "App",
@@ -51215,7 +51236,7 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"./common/Header":234,"react":230}],232:[function(require,module,exports){
+},{"./common/Header":235,"react":230}],233:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -51234,7 +51255,7 @@ var Home = React.createClass({displayName: "Home",
 
 module.exports = Home;
 
-},{"react":230}],233:[function(require,module,exports){
+},{"react":230}],234:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -51263,7 +51284,7 @@ var About = React.createClass({displayName: "About",
 
 module.exports = About;
 
-},{"react":230}],234:[function(require,module,exports){
+},{"react":230}],235:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -51291,7 +51312,7 @@ var Header = React.createClass({displayName: "Header",
 
 module.exports = Header;
 
-},{"react":230,"react-router":34}],235:[function(require,module,exports){
+},{"react":230,"react-router":34}],236:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -51328,7 +51349,7 @@ var TodoList = React.createClass({displayName: "TodoList",
 
 module.exports = TodoList;
 
-},{"react":230}],236:[function(require,module,exports){
+},{"react":230}],237:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -51364,7 +51385,7 @@ var Todos = React.createClass({displayName: "Todos",
 
 module.exports = Todos;
 
-},{"../../mockApi/todoApi":238,"./TodoList":235,"react":230}],237:[function(require,module,exports){
+},{"../../mockApi/todoApi":239,"./TodoList":236,"react":230}],238:[function(require,module,exports){
 'use strict';
 
 //bootstrap expects jquery to be in the global namespace
@@ -51383,7 +51404,7 @@ ReactDOM.render(
 , document.getElementById('app')
 );
 
-},{"./routes":240,"jquery":2,"react":230,"react-dom":4,"react-router":34}],238:[function(require,module,exports){
+},{"./routes":241,"jquery":2,"react":230,"react-dom":4,"react-router":34}],239:[function(require,module,exports){
 "use strict";
 
 //This file is mocking a web API by hitting hard coded data.
@@ -51436,7 +51457,7 @@ var todoApi = {
 
 module.exports = todoApi;
 
-},{"./todoData":239,"lodash":3}],239:[function(require,module,exports){
+},{"./todoData":240,"lodash":3}],240:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -51459,7 +51480,7 @@ module.exports = {
   ]
 };
 
-},{}],240:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -51469,15 +51490,17 @@ var App = require('./components/App');
 var HomePage = require('./components/HomePage');
 var TodoPage = require('./components/todos/TodoPage');
 var AboutPage = require('./components/about/AboutPage');
+var NotFoundPage = require('./components/404NotFound');
 
 var routes = (
   React.createElement(Route, {path: "/", component: App}, 
     React.createElement(IndexRoute, {component: HomePage}), 
     React.createElement(Route, {path: "/todos", component: TodoPage}), 
-    React.createElement(Route, {path: "/about", component: AboutPage})
+    React.createElement(Route, {path: "/about", component: AboutPage}), 
+    React.createElement(Route, {path: "*", component: NotFoundPage})
   )
 );
 
 module.exports = routes;
 
-},{"./components/App":231,"./components/HomePage":232,"./components/about/AboutPage":233,"./components/todos/TodoPage":236,"react":230,"react-router":34}]},{},[237]);
+},{"./components/404NotFound":231,"./components/App":232,"./components/HomePage":233,"./components/about/AboutPage":234,"./components/todos/TodoPage":237,"react":230,"react-router":34}]},{},[238]);
