@@ -51224,7 +51224,7 @@ var App = React.createClass({displayName: "App",
   render: function () {
     
     return (
-      React.createElement("div", null, 
+      React.createElement("div", {className: "container"}, 
         React.createElement(Header, null), 
         this.props.children
       )
@@ -51240,14 +51240,22 @@ module.exports = App;
 'use strict';
 
 var React = require('react');
-
+var Link = require('react-router').Link;
 
 var Home = React.createClass({displayName: "Home",
   render: function () {
     return (
-      React.createElement("div", {className: "jumbotron"}, 
-        React.createElement("h1", null, "Torpedos"), 
-        React.createElement("p", null, "Let's sink some tasks")
+      React.createElement("div", null, 
+        React.createElement("div", {className: "jumbotron"}, 
+          React.createElement("h1", null, "Torpedos"), 
+          React.createElement("p", null, "Let's sink some tasks"), 
+          React.createElement(Link, {className: "btn btn-info btn-lg", to: "/about"}, "Learn more")
+        ), 
+        React.createElement("div", null, 
+          React.createElement("h2", null, "Details about the app"), 
+          React.createElement("p", null, "This app is a basic todo app which shows off the basics of React, React Router, and Flux." + ' ' +  
+          "And through these technologies it performs CRUD operations by consuming a RESTful API.")
+        )
       )
     );
   }
@@ -51255,7 +51263,7 @@ var Home = React.createClass({displayName: "Home",
 
 module.exports = Home;
 
-},{"react":230}],234:[function(require,module,exports){
+},{"react":230,"react-router":34}],234:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
