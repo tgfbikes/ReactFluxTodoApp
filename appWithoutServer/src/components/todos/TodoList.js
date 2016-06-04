@@ -19,9 +19,9 @@ var TodoList = React.createClass({
     return (
         <table className="table">
           <thead>
-          <th>ID</th>
-          <th>Title</th>
-          <th>Description</th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Description</th>
           </thead>
           <tbody>
             {this.props.todos.map(createTodoRow, this)}
