@@ -15,6 +15,7 @@ var config = {
     html: './src/*.html',
     js: './src/**/*.js',
     mainJs: './src/main.js',
+    images: './src/images/*',
     css: [
       'node_modules/bootstrap/dist/css/bootstrap.min.css',
       'node_modules/bootstrap/dist/css/bootstrap-theme.min.css'
@@ -64,6 +65,12 @@ gulp.task('js', function () {
     .pipe(connect.reload());
 });
 
+gulp.task('images', function () {
+  gulp.src(config.paths.images)
+    .pipe(gulp.dest(config.paths.dist + '/images'))
+    .pipe(connect.reload());
+});
+
 // Watch all files on the html path and run the html task when they change
 gulp.task('watch', function () {
   gulp.watch(config.paths.html, ['html']);
@@ -71,4 +78,4 @@ gulp.task('watch', function () {
 });
 
 // Default task
-gulp.task('default', ['html', 'css', 'js', 'open', 'watch']);
+gulp.task('default', ['html', 'css', 'js', 'images', 'open', 'watch']);
