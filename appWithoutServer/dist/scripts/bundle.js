@@ -45968,22 +45968,9 @@ module.exports = Header;
 'use strict';
 
 var React = require('react');
-var todoApi = require('../../mockApi/todoApi');
 
 
-var Todos = React.createClass({displayName: "Todos",
-
-  getInitialState: function () {
-    return {
-      todos: []
-    };
-  },
-
-  componentWillMount: function () {
-    this.setState({
-      todos: todoApi.getAllTodos()
-    })
-  },
+var TodoList = React.createClass({displayName: "TodoList",
 
   render: function () {
     var createTodoRow = function (todo) {
@@ -45997,19 +45984,52 @@ var Todos = React.createClass({displayName: "Todos",
     };
 
     return (
-      React.createElement("div", null, 
-        React.createElement("h2", null, "Things we need to get done"), 
-
         React.createElement("table", {className: "table"}, 
           React.createElement("thead", null, 
-            React.createElement("th", null, "ID"), 
-            React.createElement("th", null, "Title"), 
-            React.createElement("th", null, "Description")
+          React.createElement("th", null, "ID"), 
+          React.createElement("th", null, "Title"), 
+          React.createElement("th", null, "Description")
           ), 
           React.createElement("tbody", null, 
-            this.state.todos.map(createTodoRow, this)
+            this.props.todos.map(createTodoRow, this)
           )
         )
+    );
+  }
+
+});
+
+module.exports = TodoList;
+
+},{"react":169}],174:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var TodoList = require('./TodoList');
+var todoApi = require('../../mockApi/todoApi');
+
+
+var Todos = React.createClass({displayName: "Todos",
+
+  getInitialState: function () {
+    return {
+      todos: []
+    };
+  },
+
+  componentDidMount: function () {
+    if (this.isMounted()) {
+      this.setState({
+        todos: todoApi.getAllTodos()
+      });
+    }
+  },
+
+  render: function () {
+    return (
+      React.createElement("div", null, 
+        React.createElement("h2", null, "Things we need to get done"), 
+        React.createElement(TodoList, {todos: this.state.todos})
       )
     );
   }
@@ -46017,7 +46037,7 @@ var Todos = React.createClass({displayName: "Todos",
 
 module.exports = Todos;
 
-},{"../../mockApi/todoApi":175,"react":169}],174:[function(require,module,exports){
+},{"../../mockApi/todoApi":176,"./TodoList":173,"react":169}],175:[function(require,module,exports){
 'use strict';
 
 //bootstrap expects jquery to be in the global namespace
@@ -46069,7 +46089,7 @@ render();
 // The div with the id 'app' is the mounting point of the application
 // ReactDOM.render(<Home />, document.getElementById('app'));
 
-},{"./components/HomePage":170,"./components/about/AboutPage":171,"./components/common/Header":172,"./components/todos/TodoPage":173,"jquery":2,"react":169,"react-dom":4}],175:[function(require,module,exports){
+},{"./components/HomePage":170,"./components/about/AboutPage":171,"./components/common/Header":172,"./components/todos/TodoPage":174,"jquery":2,"react":169,"react-dom":4}],176:[function(require,module,exports){
 "use strict";
 
 //This file is mocking a web API by hitting hard coded data.
@@ -46122,7 +46142,7 @@ var todoApi = {
 
 module.exports = todoApi;
 
-},{"./todoData":176,"lodash":3}],176:[function(require,module,exports){
+},{"./todoData":177,"lodash":3}],177:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -46145,4 +46165,4 @@ module.exports = {
   ]
 };
 
-},{}]},{},[174]);
+},{}]},{},[175]);
