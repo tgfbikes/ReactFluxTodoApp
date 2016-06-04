@@ -51395,10 +51395,10 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Router = require('react-router').Router;
 var routes = require('./routes');
-var hashHistory = require('react-router').hashHistory;
+var browserHistory = require('react-router').browserHistory;
 
 ReactDOM.render(
-  React.createElement(Router, {history: hashHistory}, 
+  React.createElement(Router, {history: browserHistory}, 
     routes
   )
 , document.getElementById('app')
