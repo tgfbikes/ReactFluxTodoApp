@@ -7,20 +7,19 @@ var TextInput = require('../common/TextInput');
 var TodoForm= React.createClass({
 
   render: function () {
-    console.log(this.props);
     return (
-      <form>
+      <form onSubmit={this.props.onSave}>
         <h3>Todo Form</h3>
         <TextInput
-          name="Title"
-          label="Title"
+          name="title"
+          label="title"
           placeholder="Title"
           value={this.props.todo.value}
           onChange={this.props.onChange}
         />
         <TextInput
-          name="Description"
-          label="Description"
+          name="description"
+          label="description"
           placeholder="Description"
           value={this.props.todo.value}
           onChange={this.props.onChange}
