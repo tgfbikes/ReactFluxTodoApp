@@ -2,6 +2,8 @@
 
 var React = require('react');
 var TodoForm = require('./TodoForm');
+var todoApi = require('../../mockApi/todoApi');
+
 
 var ManageTodoPage = React.createClass({
 
@@ -27,6 +29,11 @@ var ManageTodoPage = React.createClass({
       todo: newTodo
     });
   },
+
+  saveTodo: function (event) {
+    event.preventDefault();
+    todoApi.saveTodo(this.state.todo);
+  },
   
   render: function () {
     return (
@@ -35,6 +42,7 @@ var ManageTodoPage = React.createClass({
         <TodoForm 
           todo={this.state.todo}
           onChange={this.setTodoState}
+          onSave={this.saveTodo}
         />
       </div>
     );
