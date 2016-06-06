@@ -51193,6 +51193,443 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 module.exports = require('./lib/React');
 
 },{"./lib/React":91}],231:[function(require,module,exports){
+/*
+ * Toastr
+ * Copyright 2012-2015
+ * Authors: John Papa, Hans Fjällemark, and Tim Ferrell.
+ * All Rights Reserved.
+ * Use, reproduction, distribution, and modification of this code is subject to the terms and
+ * conditions of the MIT license, available at http://www.opensource.org/licenses/mit-license.php
+ *
+ * ARIA Support: Greta Krafsig
+ *
+ * Project: https://github.com/CodeSeven/toastr
+ */
+/* global define */
+; (function (define) {
+    define(['jquery'], function ($) {
+        return (function () {
+            var $container;
+            var listener;
+            var toastId = 0;
+            var toastType = {
+                error: 'error',
+                info: 'info',
+                success: 'success',
+                warning: 'warning'
+            };
+
+            var toastr = {
+                clear: clear,
+                remove: remove,
+                error: error,
+                getContainer: getContainer,
+                info: info,
+                options: {},
+                subscribe: subscribe,
+                success: success,
+                version: '2.1.2',
+                warning: warning
+            };
+
+            var previousToast;
+
+            return toastr;
+
+            ////////////////
+
+            function error(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.error,
+                    iconClass: getOptions().iconClasses.error,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function getContainer(options, create) {
+                if (!options) { options = getOptions(); }
+                $container = $('#' + options.containerId);
+                if ($container.length) {
+                    return $container;
+                }
+                if (create) {
+                    $container = createContainer(options);
+                }
+                return $container;
+            }
+
+            function info(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.info,
+                    iconClass: getOptions().iconClasses.info,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function subscribe(callback) {
+                listener = callback;
+            }
+
+            function success(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.success,
+                    iconClass: getOptions().iconClasses.success,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function warning(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.warning,
+                    iconClass: getOptions().iconClasses.warning,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function clear($toastElement, clearOptions) {
+                var options = getOptions();
+                if (!$container) { getContainer(options); }
+                if (!clearToast($toastElement, options, clearOptions)) {
+                    clearContainer(options);
+                }
+            }
+
+            function remove($toastElement) {
+                var options = getOptions();
+                if (!$container) { getContainer(options); }
+                if ($toastElement && $(':focus', $toastElement).length === 0) {
+                    removeToast($toastElement);
+                    return;
+                }
+                if ($container.children().length) {
+                    $container.remove();
+                }
+            }
+
+            // internal functions
+
+            function clearContainer (options) {
+                var toastsToClear = $container.children();
+                for (var i = toastsToClear.length - 1; i >= 0; i--) {
+                    clearToast($(toastsToClear[i]), options);
+                }
+            }
+
+            function clearToast ($toastElement, options, clearOptions) {
+                var force = clearOptions && clearOptions.force ? clearOptions.force : false;
+                if ($toastElement && (force || $(':focus', $toastElement).length === 0)) {
+                    $toastElement[options.hideMethod]({
+                        duration: options.hideDuration,
+                        easing: options.hideEasing,
+                        complete: function () { removeToast($toastElement); }
+                    });
+                    return true;
+                }
+                return false;
+            }
+
+            function createContainer(options) {
+                $container = $('<div/>')
+                    .attr('id', options.containerId)
+                    .addClass(options.positionClass)
+                    .attr('aria-live', 'polite')
+                    .attr('role', 'alert');
+
+                $container.appendTo($(options.target));
+                return $container;
+            }
+
+            function getDefaults() {
+                return {
+                    tapToDismiss: true,
+                    toastClass: 'toast',
+                    containerId: 'toast-container',
+                    debug: false,
+
+                    showMethod: 'fadeIn', //fadeIn, slideDown, and show are built into jQuery
+                    showDuration: 300,
+                    showEasing: 'swing', //swing and linear are built into jQuery
+                    onShown: undefined,
+                    hideMethod: 'fadeOut',
+                    hideDuration: 1000,
+                    hideEasing: 'swing',
+                    onHidden: undefined,
+                    closeMethod: false,
+                    closeDuration: false,
+                    closeEasing: false,
+
+                    extendedTimeOut: 1000,
+                    iconClasses: {
+                        error: 'toast-error',
+                        info: 'toast-info',
+                        success: 'toast-success',
+                        warning: 'toast-warning'
+                    },
+                    iconClass: 'toast-info',
+                    positionClass: 'toast-top-right',
+                    timeOut: 5000, // Set timeOut and extendedTimeOut to 0 to make it sticky
+                    titleClass: 'toast-title',
+                    messageClass: 'toast-message',
+                    escapeHtml: false,
+                    target: 'body',
+                    closeHtml: '<button type="button">&times;</button>',
+                    newestOnTop: true,
+                    preventDuplicates: false,
+                    progressBar: false
+                };
+            }
+
+            function publish(args) {
+                if (!listener) { return; }
+                listener(args);
+            }
+
+            function notify(map) {
+                var options = getOptions();
+                var iconClass = map.iconClass || options.iconClass;
+
+                if (typeof (map.optionsOverride) !== 'undefined') {
+                    options = $.extend(options, map.optionsOverride);
+                    iconClass = map.optionsOverride.iconClass || iconClass;
+                }
+
+                if (shouldExit(options, map)) { return; }
+
+                toastId++;
+
+                $container = getContainer(options, true);
+
+                var intervalId = null;
+                var $toastElement = $('<div/>');
+                var $titleElement = $('<div/>');
+                var $messageElement = $('<div/>');
+                var $progressElement = $('<div/>');
+                var $closeElement = $(options.closeHtml);
+                var progressBar = {
+                    intervalId: null,
+                    hideEta: null,
+                    maxHideTime: null
+                };
+                var response = {
+                    toastId: toastId,
+                    state: 'visible',
+                    startTime: new Date(),
+                    options: options,
+                    map: map
+                };
+
+                personalizeToast();
+
+                displayToast();
+
+                handleEvents();
+
+                publish(response);
+
+                if (options.debug && console) {
+                    console.log(response);
+                }
+
+                return $toastElement;
+
+                function escapeHtml(source) {
+                    if (source == null)
+                        source = "";
+
+                    return new String(source)
+                        .replace(/&/g, '&amp;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                }
+
+                function personalizeToast() {
+                    setIcon();
+                    setTitle();
+                    setMessage();
+                    setCloseButton();
+                    setProgressBar();
+                    setSequence();
+                }
+
+                function handleEvents() {
+                    $toastElement.hover(stickAround, delayedHideToast);
+                    if (!options.onclick && options.tapToDismiss) {
+                        $toastElement.click(hideToast);
+                    }
+
+                    if (options.closeButton && $closeElement) {
+                        $closeElement.click(function (event) {
+                            if (event.stopPropagation) {
+                                event.stopPropagation();
+                            } else if (event.cancelBubble !== undefined && event.cancelBubble !== true) {
+                                event.cancelBubble = true;
+                            }
+                            hideToast(true);
+                        });
+                    }
+
+                    if (options.onclick) {
+                        $toastElement.click(function (event) {
+                            options.onclick(event);
+                            hideToast();
+                        });
+                    }
+                }
+
+                function displayToast() {
+                    $toastElement.hide();
+
+                    $toastElement[options.showMethod](
+                        {duration: options.showDuration, easing: options.showEasing, complete: options.onShown}
+                    );
+
+                    if (options.timeOut > 0) {
+                        intervalId = setTimeout(hideToast, options.timeOut);
+                        progressBar.maxHideTime = parseFloat(options.timeOut);
+                        progressBar.hideEta = new Date().getTime() + progressBar.maxHideTime;
+                        if (options.progressBar) {
+                            progressBar.intervalId = setInterval(updateProgress, 10);
+                        }
+                    }
+                }
+
+                function setIcon() {
+                    if (map.iconClass) {
+                        $toastElement.addClass(options.toastClass).addClass(iconClass);
+                    }
+                }
+
+                function setSequence() {
+                    if (options.newestOnTop) {
+                        $container.prepend($toastElement);
+                    } else {
+                        $container.append($toastElement);
+                    }
+                }
+
+                function setTitle() {
+                    if (map.title) {
+                        $titleElement.append(!options.escapeHtml ? map.title : escapeHtml(map.title)).addClass(options.titleClass);
+                        $toastElement.append($titleElement);
+                    }
+                }
+
+                function setMessage() {
+                    if (map.message) {
+                        $messageElement.append(!options.escapeHtml ? map.message : escapeHtml(map.message)).addClass(options.messageClass);
+                        $toastElement.append($messageElement);
+                    }
+                }
+
+                function setCloseButton() {
+                    if (options.closeButton) {
+                        $closeElement.addClass('toast-close-button').attr('role', 'button');
+                        $toastElement.prepend($closeElement);
+                    }
+                }
+
+                function setProgressBar() {
+                    if (options.progressBar) {
+                        $progressElement.addClass('toast-progress');
+                        $toastElement.prepend($progressElement);
+                    }
+                }
+
+                function shouldExit(options, map) {
+                    if (options.preventDuplicates) {
+                        if (map.message === previousToast) {
+                            return true;
+                        } else {
+                            previousToast = map.message;
+                        }
+                    }
+                    return false;
+                }
+
+                function hideToast(override) {
+                    var method = override && options.closeMethod !== false ? options.closeMethod : options.hideMethod;
+                    var duration = override && options.closeDuration !== false ?
+                        options.closeDuration : options.hideDuration;
+                    var easing = override && options.closeEasing !== false ? options.closeEasing : options.hideEasing;
+                    if ($(':focus', $toastElement).length && !override) {
+                        return;
+                    }
+                    clearTimeout(progressBar.intervalId);
+                    return $toastElement[method]({
+                        duration: duration,
+                        easing: easing,
+                        complete: function () {
+                            removeToast($toastElement);
+                            if (options.onHidden && response.state !== 'hidden') {
+                                options.onHidden();
+                            }
+                            response.state = 'hidden';
+                            response.endTime = new Date();
+                            publish(response);
+                        }
+                    });
+                }
+
+                function delayedHideToast() {
+                    if (options.timeOut > 0 || options.extendedTimeOut > 0) {
+                        intervalId = setTimeout(hideToast, options.extendedTimeOut);
+                        progressBar.maxHideTime = parseFloat(options.extendedTimeOut);
+                        progressBar.hideEta = new Date().getTime() + progressBar.maxHideTime;
+                    }
+                }
+
+                function stickAround() {
+                    clearTimeout(intervalId);
+                    progressBar.hideEta = 0;
+                    $toastElement.stop(true, true)[options.showMethod](
+                        {duration: options.showDuration, easing: options.showEasing}
+                    );
+                }
+
+                function updateProgress() {
+                    var percentage = ((progressBar.hideEta - (new Date().getTime())) / progressBar.maxHideTime) * 100;
+                    $progressElement.width(percentage + '%');
+                }
+            }
+
+            function getOptions() {
+                return $.extend({}, getDefaults(), toastr.options);
+            }
+
+            function removeToast($toastElement) {
+                if (!$container) { $container = getContainer(); }
+                if ($toastElement.is(':visible')) {
+                    return;
+                }
+                $toastElement.remove();
+                $toastElement = null;
+                if ($container.children().length === 0) {
+                    $container.remove();
+                    previousToast = undefined;
+                }
+            }
+
+        })();
+    });
+}(typeof define === 'function' && define.amd ? define : function (deps, factory) {
+    if (typeof module !== 'undefined' && module.exports) { //Node
+        module.exports = factory(require('jquery'));
+    } else {
+        window.toastr = factory(window.jQuery);
+    }
+}));
+
+},{"jquery":2}],232:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -51213,10 +51650,11 @@ var NotFoundPage = React.createClass({displayName: "NotFoundPage",
 
 module.exports = NotFoundPage;
 
-},{"react":230,"react-router":34}],232:[function(require,module,exports){
+},{"react":230,"react-router":34}],233:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
+var Router = require('react-router').Router;
 var Header = require('./common/Header');
 
 var App = React.createClass({displayName: "App",
@@ -51236,7 +51674,7 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"./common/Header":235,"react":230}],233:[function(require,module,exports){
+},{"./common/Header":236,"react":230,"react-router":34}],234:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -51263,7 +51701,7 @@ var Home = React.createClass({displayName: "Home",
 
 module.exports = Home;
 
-},{"react":230,"react-router":34}],234:[function(require,module,exports){
+},{"react":230,"react-router":34}],235:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -51292,7 +51730,7 @@ var About = React.createClass({displayName: "About",
 
 module.exports = About;
 
-},{"react":230}],235:[function(require,module,exports){
+},{"react":230}],236:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -51320,10 +51758,188 @@ var Header = React.createClass({displayName: "Header",
 
 module.exports = Header;
 
-},{"react":230,"react-router":34}],236:[function(require,module,exports){
+},{"react":230,"react-router":34}],237:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
+
+var TextInput = React.createClass({displayName: "TextInput",
+  
+  render: function () {
+    var wrapperClass = 'form-group';
+    
+    if (this.props.error && this.props.error.length > 0) {
+      wrapperClass += ' ' + 'has-error';
+    }
+    
+    return (
+      React.createElement("div", {className: wrapperClass}, 
+        React.createElement("label", {htmlFor: this.props.name}, this.props.name), 
+        React.createElement("div", {className: "field"}, 
+          React.createElement("input", {type: "text", 
+             name: this.props.name, 
+             className: "form-control", 
+             placeholder: this.props.placeholder, 
+             ref: this.props.name, 
+             value: this.props.value, 
+             onChange: this.props.onChange}
+           ), 
+          React.createElement("div", {className: "input"}, this.props.error)
+        )
+      )
+    );
+  }
+  
+});
+
+module.exports = TextInput;
+
+},{"react":230}],238:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var hashHistory = require('react-router').hashHistory;
+var TodoForm = require('./TodoForm');
+var todoApi = require('../../mockApi/todoApi');
+var toastr = require('toastr');
+
+
+var ManageTodoPage = React.createClass({displayName: "ManageTodoPage",
+
+  getInitialState: function () {
+    return {
+      errors: {},
+      todo: {
+        id: '',
+        title: '',
+        description: '',
+        completed: false
+      }
+    };
+  },
+
+  componentWillMount: function () {
+    var todoId = this.props.params.id; // from the path 'todo/id'
+    console.log(this.props.params);
+
+    if (todoId) {
+      this.setState({
+        todo: todoApi.getTodoById(todoId)
+      });
+    }
+  },
+
+  setTodoState: function (event) {
+    this.setState({dirty: true});
+    var field = event.target.name;
+    var value = event.target.value;
+    var newTodo = Object.assign({}, this.state.todo);
+    
+    newTodo[field] = value;
+    this.setState({
+      todo: newTodo
+    });
+  },
+  
+  clearPreviousErrors: function () {
+    this.setState({
+      errors: {}
+    });
+  },
+
+  todoFormIsValid: function () {
+    var formIsValid = true;
+    var newErrors = {};
+    this.clearPreviousErrors();
+    
+    if (this.state.todo.title.length < 1) {
+      newErrors.title = 'Title cannot be blank...silly goose';
+      formIsValid = false;
+    }
+    
+    if (this.state.todo.description.length < 1) {
+      newErrors.description = 'Description cannot be blank...crazy pants';
+      formIsValid = false;
+    }
+    
+    this.setState({
+      errors: newErrors
+    });
+    
+    return formIsValid;
+  },
+
+  saveTodo: function (event) {
+    event.preventDefault();
+
+    if (this.todoFormIsValid()) {
+      todoApi.saveTodo(this.state.todo);
+      toastr.success('Todo Saved');
+      hashHistory.push('/todos');
+    }
+  },
+  
+  render: function () {
+    return (
+      React.createElement("div", null, 
+        React.createElement("h1", null, "Manage Todos"), 
+        React.createElement(TodoForm, {
+          todo: this.state.todo, 
+          onChange: this.setTodoState, 
+          onSave: this.saveTodo, 
+          errors: this.state.errors}
+        )
+      )
+    );
+  }
+  
+});
+
+module.exports = ManageTodoPage;
+
+},{"../../mockApi/todoApi":243,"./TodoForm":239,"react":230,"react-router":34,"toastr":231}],239:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var TextInput = require('../common/TextInput');
+
+
+var TodoForm= React.createClass({displayName: "TodoForm",
+
+  render: function () {
+    return (
+      React.createElement("form", {onSubmit: this.props.onSave}, 
+        React.createElement("h3", null, "Todo Form"), 
+        React.createElement(TextInput, {
+          name: "title", 
+          label: "title", 
+          placeholder: "Title", 
+          value: this.props.todo.value, 
+          error: this.props.errors.title, 
+          onChange: this.props.onChange}
+        ), 
+        React.createElement(TextInput, {
+          name: "description", 
+          label: "description", 
+          placeholder: "Description", 
+          value: this.props.todo.value, 
+          error: this.props.errors.description, 
+          onChange: this.props.onChange}
+        ), 
+        React.createElement("input", {type: "submit", value: "Save", className: "btn btn-success btn-lg"})
+      )
+    );
+  }
+
+});
+
+module.exports = TodoForm;
+
+},{"../common/TextInput":237,"react":230}],240:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Link = require('react-router').Link;
 
 
 var TodoList = React.createClass({displayName: "TodoList",
@@ -51333,7 +51949,7 @@ var TodoList = React.createClass({displayName: "TodoList",
       return (
         React.createElement("tr", {key: todo.id}, 
           React.createElement("td", null, todo.id), 
-          React.createElement("td", null, React.createElement("a", {href: "/#todos/" + todo.id}, todo.title)), 
+          React.createElement("td", null, React.createElement(Link, {to: "/todos", params: {id: todo.id}}, todo.title)), 
           React.createElement("td", null, todo.description)
         )
       );
@@ -51357,10 +51973,11 @@ var TodoList = React.createClass({displayName: "TodoList",
 
 module.exports = TodoList;
 
-},{"react":230}],237:[function(require,module,exports){
+},{"react":230,"react-router":34}],241:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
+var Link = require('react-router').Link;
 var TodoList = require('./TodoList');
 var todoApi = require('../../mockApi/todoApi');
 
@@ -51385,6 +52002,7 @@ var Todos = React.createClass({displayName: "Todos",
     return (
       React.createElement("div", null, 
         React.createElement("h2", null, "Things we need to get done"), 
+        React.createElement(Link, {className: "btn btn-success btn-sm", to: "/manage-todo"}, "Add a Todo"), 
         React.createElement(TodoList, {todos: this.state.todos})
       )
     );
@@ -51393,7 +52011,7 @@ var Todos = React.createClass({displayName: "Todos",
 
 module.exports = Todos;
 
-},{"../../mockApi/todoApi":239,"./TodoList":236,"react":230}],238:[function(require,module,exports){
+},{"../../mockApi/todoApi":243,"./TodoList":240,"react":230,"react-router":34}],242:[function(require,module,exports){
 'use strict';
 
 //bootstrap expects jquery to be in the global namespace
@@ -51415,7 +52033,7 @@ ReactDOM.render(
 , document.getElementById('app')
 );
 
-},{"./routes":241,"jquery":2,"react":230,"react-dom":4,"react-router":34}],239:[function(require,module,exports){
+},{"./routes":245,"jquery":2,"react":230,"react-dom":4,"react-router":34}],243:[function(require,module,exports){
 "use strict";
 
 //This file is mocking a web API by hitting hard coded data.
@@ -51425,7 +52043,7 @@ var _ = require('lodash');
 //This would be performed on the server in a real app. Just stubbing in.
 var _generateId = function(todo) {
   // todo: get this to generate an id based off of position
-  return todo.title.toLowerCase() + '-' + todo.description.toLowerCase();
+  return todos.length;
 };
 
 var _clone = function(item) {
@@ -51445,16 +52063,15 @@ var todoApi = {
   saveTodo: function(todo) {
     //pretend an ajax call to web api is made here
     console.log('Saved Todo, mocking an AJAX call...');
-
     if (todo.id) {
       var existingTodoIndex = _.indexOf(todos, _.find(todos, {id: todo.id}));
-      todos.splice(existingAuthorIndex, 1, todo);
+      todos.splice(existingTodoIndex, 1, todo);
     } else {
       //Just simulating creation here.
       //The server would generate ids for new authors in a real app.
       //Cloning so copy returned is passed by value rather than by reference.
       todo.id = _generateId(todo);
-      todo.push(todo);
+      todos.push(todo);
     }
 
     return _clone(todo);
@@ -51468,7 +52085,7 @@ var todoApi = {
 
 module.exports = todoApi;
 
-},{"./todoData":240,"lodash":3}],240:[function(require,module,exports){
+},{"./todoData":244,"lodash":3}],244:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -51491,7 +52108,7 @@ module.exports = {
   ]
 };
 
-},{}],241:[function(require,module,exports){
+},{}],245:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -51501,6 +52118,7 @@ var App = require('./components/App');
 var HomePage = require('./components/HomePage');
 var TodoPage = require('./components/todos/TodoPage');
 var AboutPage = require('./components/about/AboutPage');
+var ManageTodoPage = require('./components/todos/ManageTodoPage');
 var NotFoundPage = require('./components/404NotFound');
 
 var routes = (
@@ -51508,10 +52126,12 @@ var routes = (
     React.createElement(IndexRoute, {component: HomePage}), 
     React.createElement(Route, {path: "/todos", component: TodoPage}), 
     React.createElement(Route, {path: "/about", component: AboutPage}), 
+    React.createElement(Route, {path: "/manage-todo", component: ManageTodoPage}), 
+    React.createElement(Route, {path: "/manage-todo/:id", component: ManageTodoPage}), 
     React.createElement(Route, {path: "*", component: NotFoundPage})
   )
 );
 
 module.exports = routes;
 
-},{"./components/404NotFound":231,"./components/App":232,"./components/HomePage":233,"./components/about/AboutPage":234,"./components/todos/TodoPage":237,"react":230,"react-router":34}]},{},[238]);
+},{"./components/404NotFound":232,"./components/App":233,"./components/HomePage":234,"./components/about/AboutPage":235,"./components/todos/ManageTodoPage":238,"./components/todos/TodoPage":241,"react":230,"react-router":34}]},{},[242]);
