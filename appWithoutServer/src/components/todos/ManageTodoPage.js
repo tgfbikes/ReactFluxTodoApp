@@ -4,12 +4,14 @@ var React = require('react');
 var hashHistory = require('react-router').hashHistory;
 var TodoForm = require('./TodoForm');
 var todoApi = require('../../mockApi/todoApi');
+var toastr = require('toastr');
 
 
 var ManageTodoPage = React.createClass({
 
   getInitialState: function () {
     return {
+      errors: {},
       todo: {
         id: '',
         title: '',
@@ -19,7 +21,19 @@ var ManageTodoPage = React.createClass({
     };
   },
 
+  componentWillMount: function () {
+    var todoId = this.props.params.id; // from the path 'todo/id'
+    console.log(this.props.params);
+
+    if (todoId) {
+      this.setState({
+        todo: todoApi.getTodoById(todoId)
+      });
+    }
+  },
+
   setTodoState: function (event) {
+    this.setState({dirty: true});
     var field = event.target.name;
     var value = event.target.value;
     var newTodo = Object.assign({}, this.state.todo);
@@ -29,11 +43,43 @@ var ManageTodoPage = React.createClass({
       todo: newTodo
     });
   },
+  
+  clearPreviousErrors: function () {
+    this.setState({
+      errors: {}
+    });
+  },
+
+  todoFormIsValid: function () {
+    var formIsValid = true;
+    var newErrors = {};
+    this.clearPreviousErrors();
+    
+    if (this.state.todo.title.length < 1) {
+      newErrors.title = 'Title cannot be blank...silly goose';
+      formIsValid = false;
+    }
+    
+    if (this.state.todo.description.length < 1) {
+      newErrors.description = 'Description cannot be blank...crazy pants';
+      formIsValid = false;
+    }
+    
+    this.setState({
+      errors: newErrors
+    });
+    
+    return formIsValid;
+  },
 
   saveTodo: function (event) {
     event.preventDefault();
-    todoApi.saveTodo(this.state.todo);
-    hashHistory.push('/todos');
+
+    if (this.todoFormIsValid()) {
+      todoApi.saveTodo(this.state.todo);
+      toastr.success('Todo Saved');
+      hashHistory.push('/todos');
+    }
   },
   
   render: function () {
@@ -44,6 +90,7 @@ var ManageTodoPage = React.createClass({
           todo={this.state.todo}
           onChange={this.setTodoState}
           onSave={this.saveTodo}
+          errors={this.state.errors}
         />
       </div>
     );
