@@ -27,7 +27,6 @@ var todoApi = {
   saveTodo: function(todo) {
     //pretend an ajax call to web api is made here
     console.log('Saved Todo, mocking an AJAX call...');
-    console.log(todo);
     if (todo.id) {
       var existingTodoIndex = _.indexOf(todos, _.find(todos, {id: todo.id}));
       todos.splice(existingTodoIndex, 1, todo);
