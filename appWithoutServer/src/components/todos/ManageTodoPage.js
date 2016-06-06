@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var hashHistory = require('react-router').hashHistory;
 var TodoForm = require('./TodoForm');
 var todoApi = require('../../mockApi/todoApi');
 
@@ -19,7 +20,6 @@ var ManageTodoPage = React.createClass({
   },
 
   setTodoState: function (event) {
-    console.log(event.target.value);
     var field = event.target.name;
     var value = event.target.value;
     var newTodo = Object.assign({}, this.state.todo);
@@ -33,6 +33,7 @@ var ManageTodoPage = React.createClass({
   saveTodo: function (event) {
     event.preventDefault();
     todoApi.saveTodo(this.state.todo);
+    hashHistory.push('/todos');
   },
   
   render: function () {
