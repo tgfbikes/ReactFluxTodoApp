@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var Router = require('react-router').Router;
 var Header = require('./common/Header');
 
 var App = React.createClass({
