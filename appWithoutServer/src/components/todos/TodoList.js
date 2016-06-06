@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var Link = require('react-router').Link;
 
 
 var TodoList = React.createClass({
@@ -10,7 +11,7 @@ var TodoList = React.createClass({
       return (
         <tr key={todo.id}>
           <td>{todo.id}</td>
-          <td><a href={"/#todos/" + todo.id}>{todo.title}</a></td>
+          <td><Link to="/todos" params={{id: todo.id}}>{todo.title}</Link></td>
           <td>{todo.description}</td>
         </tr>
       );
