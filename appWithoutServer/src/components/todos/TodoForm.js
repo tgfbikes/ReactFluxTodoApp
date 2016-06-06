@@ -15,6 +15,7 @@ var TodoForm= React.createClass({
           label="title"
           placeholder="Title"
           value={this.props.todo.value}
+          error={this.props.errors.title}
           onChange={this.props.onChange}
         />
         <TextInput
@@ -22,6 +23,7 @@ var TodoForm= React.createClass({
           label="description"
           placeholder="Description"
           value={this.props.todo.value}
+          error={this.props.errors.description}
           onChange={this.props.onChange}
         />
         <input type="submit" value="Save" className="btn btn-success btn-lg" />
