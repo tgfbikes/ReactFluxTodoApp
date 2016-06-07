@@ -14,7 +14,7 @@ var TodoForm= React.createClass({
           name="title"
           label="title"
           placeholder="Title"
-          value={this.props.todo.value}
+          value={this.props.todo.title}
           error={this.props.errors.title}
           onChange={this.props.onChange}
         />
@@ -22,7 +22,7 @@ var TodoForm= React.createClass({
           name="description"
           label="description"
           placeholder="Description"
-          value={this.props.todo.value}
+          value={this.props.todo.description}
           error={this.props.errors.description}
           onChange={this.props.onChange}
         />

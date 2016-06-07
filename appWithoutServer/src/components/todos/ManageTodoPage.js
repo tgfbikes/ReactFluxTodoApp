@@ -3,6 +3,8 @@
 var React = require('react');
 var hashHistory = require('react-router').hashHistory;
 var TodoForm = require('./TodoForm');
+var TodoActionCreator = require('../../actions/todoActionCreator');
+var TodoStore = require('../../stores/todoStore');
 var todoApi = require('../../mockApi/todoApi');
 var toastr = require('toastr');
 
@@ -23,11 +25,10 @@ var ManageTodoPage = React.createClass({
 
   componentWillMount: function () {
     var todoId = this.props.params.id; // from the path 'todo/id'
-    console.log(this.props.params);
-
     if (todoId) {
       this.setState({
-        todo: todoApi.getTodoById(todoId)
+        todo: TodoStore.getTodoById(todoId)
+        // todo: TodoStore.getTodoById(todoId)
       });
     }
   },
@@ -75,11 +76,18 @@ var ManageTodoPage = React.createClass({
   saveTodo: function (event) {
     event.preventDefault();
 
-    if (this.todoFormIsValid()) {
-      todoApi.saveTodo(this.state.todo);
-      toastr.success('Todo Saved');
-      hashHistory.push('/todos');
+    if (!this.todoFormIsValid()) {
+      return;
     }
+    
+    if (this.state.todo.id) {
+      TodoActionCreator.updateTodo(this.state.todo);
+    } else {
+      TodoActionCreator.createTodo(this.state.todo);
+    }
+    
+    toastr.success('Todo Saved');
+    hashHistory.push('/todos');
   },
   
   render: function () {
