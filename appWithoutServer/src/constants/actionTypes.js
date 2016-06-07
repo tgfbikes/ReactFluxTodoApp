@@ -2,5 +2,7 @@
 
 
 module.exports = {
-  CREATE_TODO: 'create todo'
+  INITIALIZE: 'initialize',
+  CREATE_TODO: 'create todo',
+  UPDATE_TODO: 'update todo'
 };
