@@ -8,6 +8,9 @@ var ReactDOM = require('react-dom');
 var Router = require('react-router').Router;
 var routes = require('./routes');
 var hashHistory = require('react-router').hashHistory;
+var InitializeActionCreator = require('./actions/initializeActionCreator');
+
+InitializeActionCreator.initializeApp();
 
 // Need server to be set up to use
 // var browserHistory = require('react-router').browserHistory;
