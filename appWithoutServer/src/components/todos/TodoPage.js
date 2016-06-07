@@ -3,23 +3,15 @@
 var React = require('react');
 var Link = require('react-router').Link;
 var TodoList = require('./TodoList');
-var todoApi = require('../../mockApi/todoApi');
+var TodoStore = require('../../stores/todoStore');
 
 
 var Todos = React.createClass({
 
   getInitialState: function () {
     return {
-      todos: []
+      todos: TodoStore.getAllTodos()
     };
-  },
-
-  componentDidMount: function () {
-    if (this.isMounted()) {
-      this.setState({
-        todos: todoApi.getAllTodos()
-      });
-    }
   },
 
   render: function () {
