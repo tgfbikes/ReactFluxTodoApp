@@ -11,7 +11,7 @@ var TodoList = React.createClass({
       return (
         <tr key={todo.id}>
           <td>{todo.id}</td>
-          <td><Link to="/todos" params={{id: todo.id}}>{todo.title}</Link></td>
+          <td><Link to={'/manage-todo/' + todo.id}>{todo.title}</Link></td>
           <td>{todo.description}</td>
         </tr>
       );
