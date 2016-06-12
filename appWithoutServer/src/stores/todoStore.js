@@ -49,6 +49,7 @@ Dispatcher.register(function (action) {
       TodoStore.emitChange();
       break;
     case ActionTypes.DELETE_TODO:
+      _.remove(_todos, {id: action.todoId});
       TodoStore.emitChange();
       break;
     default:

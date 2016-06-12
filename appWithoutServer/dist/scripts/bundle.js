@@ -52274,6 +52274,15 @@ var TodoActionCreator = {
       actionType: ActionTypes.UPDATE_TODO,  
       todo: updatedTodo
     });
+  },
+
+  deleteTodo: function (todoId) {
+    todoApi.deleteTodo(todoId);
+
+    Dispatcher.dispatch({
+      actionType: ActionTypes.DELETE_TODO,
+      todoId: todoId 
+    });
   }
 };
 
@@ -52598,9 +52607,17 @@ module.exports = TodoForm;
 
 var React = require('react');
 var Link = require('react-router').Link;
+var TodoActionCreator = require('../../actions/todoActionCreator');
+var toastr = require('toastr');
 
 
 var TodoList = React.createClass({displayName: "TodoList",
+
+  deleteTodo: function (todoId, event) {
+    event.preventDefault();
+    TodoActionCreator.deleteTodo(todoId);
+    toastr.success('Todo Deleted...hooray...');
+  },
 
   render: function () {
     var createTodoRow = function (todo) {
@@ -52608,7 +52625,8 @@ var TodoList = React.createClass({displayName: "TodoList",
         React.createElement("tr", {key: todo.id}, 
           React.createElement("td", null, todo.id), 
           React.createElement("td", null, React.createElement(Link, {to: '/manage-todo/' + todo.id}, todo.title)), 
-          React.createElement("td", null, todo.description)
+          React.createElement("td", null, todo.description), 
+          React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.deleteTodo.bind(this, todo.id)}, "Delete"))
         )
       );
     };
@@ -52616,9 +52634,11 @@ var TodoList = React.createClass({displayName: "TodoList",
     return (
         React.createElement("table", {className: "table"}, 
           React.createElement("thead", null, 
-            React.createElement("th", null, "ID"), 
-            React.createElement("th", null, "Title"), 
-            React.createElement("th", null, "Description")
+            React.createElement("tr", null, 
+              React.createElement("th", null, "ID"), 
+              React.createElement("th", null, "Title"), 
+              React.createElement("th", null, "Description")
+            )
           ), 
           React.createElement("tbody", null, 
             this.props.todos.map(createTodoRow, this)
@@ -52631,7 +52651,7 @@ var TodoList = React.createClass({displayName: "TodoList",
 
 module.exports = TodoList;
 
-},{"react":234,"react-router":38}],247:[function(require,module,exports){
+},{"../../actions/todoActionCreator":237,"react":234,"react-router":38,"toastr":235}],247:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -52646,6 +52666,22 @@ var Todos = React.createClass({displayName: "Todos",
     return {
       todos: TodoStore.getAllTodos()
     };
+  },
+
+  // Start listening to the TodoStore 
+  componentWillMount: function () {
+    TodoStore.addChangeListener(this.onChange);
+  },
+
+  // Stop listening to the TodoStore 
+  componentWillUnmount: function () {
+    TodoStore.removeChangeListener(this.onChange);
+  },
+  
+  onChange: function () {
+    this.setState({
+      todos: TodoStore.getAllTodos()
+    });
   },
 
   render: function () {
@@ -52668,7 +52704,8 @@ module.exports = Todos;
 module.exports = {
   INITIALIZE: 'initialize',
   CREATE_TODO: 'create todo',
-  UPDATE_TODO: 'update todo'
+  UPDATE_TODO: 'update todo',
+  DELETE_TODO: 'delete todo'
 };
 
 },{}],249:[function(require,module,exports){
@@ -52712,10 +52749,10 @@ var todos = require('./todoData').todos;
 var _ = require('lodash');
 
 //This would be performed on the server in a real app. Just stubbing in.
-var _generateId = function(todo) {
-  // todo: get this to generate an id based off of position
-  var num = todos.length;
-  return num.toString();
+var _generateId = function() {
+  // get the last id and increment by 1, always will keep keys unique
+  var newIndex = parseInt(_.last(todos).id) + 1;
+  return newIndex.toString();
 };
 
 var _clone = function(item) {
@@ -52742,7 +52779,7 @@ var todoApi = {
       //Just simulating creation here.
       //The server would generate ids for new authors in a real app.
       //Cloning so copy returned is passed by value rather than by reference.
-      todo.id = _generateId(todo);
+      todo.id = _generateId();
       todos.push(todo);
     }
 
@@ -52750,7 +52787,7 @@ var todoApi = {
   },
 
   deleteTodo: function(id) {
-    console.log('Deleted Todo, mocking an AJAX call...');
+    console.log('Deleted Todo ID ' + id + ', mocking an AJAX call...');
     _.remove(todos, { id: id});
   }
 };
@@ -52858,6 +52895,7 @@ Dispatcher.register(function (action) {
       TodoStore.emitChange();
       break;
     case ActionTypes.DELETE_TODO:
+      _.remove(_todos, {id: action.todoId});
       TodoStore.emitChange();
       break;
     default:

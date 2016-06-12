@@ -14,6 +14,22 @@ var Todos = React.createClass({
     };
   },
 
+  // Start listening to the TodoStore 
+  componentWillMount: function () {
+    TodoStore.addChangeListener(this.onChange);
+  },
+
+  // Stop listening to the TodoStore 
+  componentWillUnmount: function () {
+    TodoStore.removeChangeListener(this.onChange);
+  },
+  
+  onChange: function () {
+    this.setState({
+      todos: TodoStore.getAllTodos()
+    });
+  },
+
   render: function () {
     return (
       <div>
