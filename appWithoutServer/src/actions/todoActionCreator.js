@@ -22,6 +22,15 @@ var TodoActionCreator = {
       actionType: ActionTypes.UPDATE_TODO,  
       todo: updatedTodo
     });
+  },
+
+  deleteTodo: function (todoId) {
+    todoApi.deleteTodo(todoId);
+
+    Dispatcher.dispatch({
+      actionType: ActionTypes.DELETE_TODO,
+      todoId: todoId 
+    });
   }
 };
 
