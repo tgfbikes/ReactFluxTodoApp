@@ -5,10 +5,9 @@ var todos = require('./todoData').todos;
 var _ = require('lodash');
 
 //This would be performed on the server in a real app. Just stubbing in.
-var _generateId = function(todo) {
-  // todo: get this to generate an id based off of position
+var _generateId = function() {
+  // get the last id and increment by 1, always will keep keys unique
   var newIndex = parseInt(_.last(todos).id) + 1;
-  console.log(newIndex);
   return newIndex.toString();
 };
 
@@ -36,7 +35,7 @@ var todoApi = {
       //Just simulating creation here.
       //The server would generate ids for new authors in a real app.
       //Cloning so copy returned is passed by value rather than by reference.
-      todo.id = _generateId(todo);
+      todo.id = _generateId();
       todos.push(todo);
     }
 
