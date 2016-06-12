@@ -7,8 +7,9 @@ var _ = require('lodash');
 //This would be performed on the server in a real app. Just stubbing in.
 var _generateId = function(todo) {
   // todo: get this to generate an id based off of position
-  var num = todos.length;
-  return num.toString();
+  var newIndex = parseInt(_.last(todos).id) + 1;
+  console.log(newIndex);
+  return newIndex.toString();
 };
 
 var _clone = function(item) {
@@ -43,7 +44,7 @@ var todoApi = {
   },
 
   deleteTodo: function(id) {
-    console.log('Deleted Todo, mocking an AJAX call...');
+    console.log('Deleted Todo ID ' + id + ', mocking an AJAX call...');
     _.remove(todos, { id: id});
   }
 };
