@@ -52267,15 +52267,16 @@ var TodoActionCreator = {
     });
   },
 
-  updateTodo: function (todo) {
-    var updatedTodo = todoApi.saveTodo(todo); 
+  updateTodo: function (todo, changeStatus) {
+    var change = changeStatus || false;
+    var updatedTodo = todoApi.saveTodo(todo, change); 
 
     Dispatcher.dispatch({
       actionType: ActionTypes.UPDATE_TODO,  
       todo: updatedTodo
     });
   },
-
+  
   deleteTodo: function (todoId) {
     todoApi.deleteTodo(todoId);
 
@@ -52619,14 +52620,32 @@ var TodoList = React.createClass({displayName: "TodoList",
     toastr.success('Todo Deleted...hooray...');
   },
 
+  updateTodo: function (todo, event) {
+    event.preventDefault();
+    TodoActionCreator.updateTodo(todo, true);
+    toastr.success('Todo Completed.');
+  },
+
   render: function () {
     var createTodoRow = function (todo) {
+      var getDescription = function () {
+        if (todo.done) {
+          return (
+            React.createElement("s", null, todo.description)
+          );
+        } else {
+          return (
+            React.createElement("span", null, todo.description)
+          );
+        }
+      };
       return (
         React.createElement("tr", {key: todo.id}, 
           React.createElement("td", null, todo.id), 
           React.createElement("td", null, React.createElement(Link, {to: '/manage-todo/' + todo.id}, todo.title)), 
-          React.createElement("td", null, todo.description), 
-          React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.deleteTodo.bind(this, todo.id)}, "Delete"))
+          React.createElement("td", null, getDescription()), 
+          React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.deleteTodo.bind(this, todo.id)}, "Delete")), 
+          React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.updateTodo.bind(this, todo)}, "Mark as Done"))
         )
       );
     };
@@ -52769,11 +52788,30 @@ var todoApi = {
     return _clone(todo);
   },
 
-  saveTodo: function(todo) {
+  saveTodo: function(todo, change) {
     //pretend an ajax call to web api is made here
     console.log('Saved Todo, mocking an AJAX call...');
+    var existingTodoIndex;
+    if (todo.id && change) {
+      existingTodoIndex = _.indexOf(todos, _.find(todos, {id: todo.id}));
+      
+      switch (todo.done) {
+        case false:
+          console.log('eval false');
+          todo.done = true;
+          break;
+        case true:
+          console.log('eval true');
+          todo.done = false;
+          break;
+        default:
+          //do nothing
+      }
+      todos.splice(existingTodoIndex, 1, todo);
+      console.log(todos);
+    }
     if (todo.id) {
-      var existingTodoIndex = _.indexOf(todos, _.find(todos, {id: todo.id}));
+      existingTodoIndex = _.indexOf(todos, _.find(todos, {id: todo.id}));
       todos.splice(existingTodoIndex, 1, todo);
     } else {
       //Just simulating creation here.
@@ -52802,17 +52840,20 @@ module.exports = {
     {
       id: '0',
       title: 'Wear tech shirts',
-      description: 'To look impressive'
+      description: 'To look impressive',
+      done: false
     },
     {
       id: '1',
       title: 'Use big words in conversation',
-      description: 'To look like you know what your are talking about'
+      description: 'To look like you know what your are talking about',
+      done: false
     },
     {
       id: '2',
       title: 'Steal DJ\'s car',
-      description: 'To do donuts in the parking lot'
+      description: 'To do donuts in the parking lot',
+      done: false
     }
   ]
 };
