@@ -52797,18 +52797,15 @@ var todoApi = {
       
       switch (todo.done) {
         case false:
-          console.log('eval false');
           todo.done = true;
           break;
         case true:
-          console.log('eval true');
           todo.done = false;
           break;
         default:
           //do nothing
       }
       todos.splice(existingTodoIndex, 1, todo);
-      console.log(todos);
     }
     if (todo.id) {
       existingTodoIndex = _.indexOf(todos, _.find(todos, {id: todo.id}));
