@@ -25,11 +25,30 @@ var todoApi = {
     return _clone(todo);
   },
 
-  saveTodo: function(todo) {
+  saveTodo: function(todo, change) {
     //pretend an ajax call to web api is made here
     console.log('Saved Todo, mocking an AJAX call...');
+    var existingTodoIndex;
+    if (todo.id && change) {
+      existingTodoIndex = _.indexOf(todos, _.find(todos, {id: todo.id}));
+      
+      switch (todo.done) {
+        case false:
+          console.log('eval false');
+          todo.done = true;
+          break;
+        case true:
+          console.log('eval true');
+          todo.done = false;
+          break;
+        default:
+          //do nothing
+      }
+      todos.splice(existingTodoIndex, 1, todo);
+      console.log(todos);
+    }
     if (todo.id) {
-      var existingTodoIndex = _.indexOf(todos, _.find(todos, {id: todo.id}));
+      existingTodoIndex = _.indexOf(todos, _.find(todos, {id: todo.id}));
       todos.splice(existingTodoIndex, 1, todo);
     } else {
       //Just simulating creation here.
