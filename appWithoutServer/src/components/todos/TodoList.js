@@ -14,14 +14,32 @@ var TodoList = React.createClass({
     toastr.success('Todo Deleted...hooray...');
   },
 
+  updateTodo: function (todo, event) {
+    event.preventDefault();
+    TodoActionCreator.updateTodo(todo, true);
+    toastr.success('Todo Completed.');
+  },
+
   render: function () {
     var createTodoRow = function (todo) {
+      var getDescription = function () {
+        if (todo.done) {
+          return (
+            <s>{todo.description}</s>
+          );
+        } else {
+          return (
+            <span>{todo.description}</span>
+          );
+        }
+      };
       return (
         <tr key={todo.id}>
           <td>{todo.id}</td>
           <td><Link to={'/manage-todo/' + todo.id}>{todo.title}</Link></td>
-          <td>{todo.description}</td>
+          <td>{getDescription()}</td>
           <td><a href="#" onClick={this.deleteTodo.bind(this, todo.id)}>Delete</a></td>
+          <td><a href="#" onClick={this.updateTodo.bind(this, todo)}>Mark as Done</a></td>
         </tr>
       );
     };

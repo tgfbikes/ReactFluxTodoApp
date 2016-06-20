@@ -15,15 +15,16 @@ var TodoActionCreator = {
     });
   },
 
-  updateTodo: function (todo) {
-    var updatedTodo = todoApi.saveTodo(todo); 
+  updateTodo: function (todo, changeStatus) {
+    var change = changeStatus || false;
+    var updatedTodo = todoApi.saveTodo(todo, change); 
 
     Dispatcher.dispatch({
       actionType: ActionTypes.UPDATE_TODO,  
       todo: updatedTodo
     });
   },
-
+  
   deleteTodo: function (todoId) {
     todoApi.deleteTodo(todoId);
 
