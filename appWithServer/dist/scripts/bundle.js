@@ -229,7 +229,8 @@ module.exports = TextInput;
 'use strict';
 
 var React = require('react');
-var hashHistory = require('react-router').hashHistory;
+// var hashHistory = require('react-router').hashHistory;
+var browserHistory = require('react-router').browserHistory;
 var TodoForm = require('./TodoForm');
 var TodoActionCreator = require('../../actions/todoActionCreator');
 var TodoStore = require('../../stores/todoStore');
@@ -315,7 +316,7 @@ var ManageTodoPage = React.createClass({displayName: "ManageTodoPage",
     }
     
     toastr.success('Todo Saved');
-    hashHistory.push('/todos');
+    browserHistory.push('/todos');
   },
   
   render: function () {
