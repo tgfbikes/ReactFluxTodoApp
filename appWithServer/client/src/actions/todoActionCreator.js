@@ -28,13 +28,16 @@ var TodoActionCreator = {
     });
   },
   
-  deleteTodo: function (todoId) {
-    todoApi.deleteTodo(todoId);
+  deleteTodo: function (todo) {
+    var deleteTodoPromise = API.deleteTodo(todo);
 
-    Dispatcher.dispatch({
-      actionType: ActionTypes.DELETE_TODO,
-      todoId: todoId 
-    });
+    deleteTodoPromise
+      .then(function () {
+        Dispatcher.dispatch({
+          actionType: ActionTypes.DELETE_TODO,
+          todoId: todo._id
+        });
+      });
   }
 };
 
