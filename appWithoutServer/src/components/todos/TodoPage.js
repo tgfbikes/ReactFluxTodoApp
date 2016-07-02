@@ -23,7 +23,8 @@ var Todos = React.createClass({
   componentWillUnmount: function () {
     TodoStore.removeChangeListener(this.onChange);
   },
-  
+
+
   onChange: function () {
     this.setState({
       todos: TodoStore.getAllTodos()
@@ -35,7 +36,10 @@ var Todos = React.createClass({
       <div>
         <h2>Things we need to get done</h2>
         <Link className="btn btn-success btn-sm" to="/manage-todo">Add a Todo</Link>
-        <TodoList todos={this.state.todos} />
+        <TodoList
+          todos={this.state.todos}
+          deleteTodo={this.deleteTodo}
+        />
       </div>
     );
   }

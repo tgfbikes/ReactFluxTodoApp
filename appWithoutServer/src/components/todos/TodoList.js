@@ -8,16 +8,18 @@ var toastr = require('toastr');
 
 var TodoList = React.createClass({
 
-  deleteTodo: function (todoId, event) {
-    event.preventDefault();
-    TodoActionCreator.deleteTodo(todoId);
-    toastr.success('Todo Deleted...hooray...');
-  },
 
   updateTodo: function (todo, event) {
     event.preventDefault();
     TodoActionCreator.updateTodo(todo, true);
     toastr.success('Todo Completed.');
+  },
+  
+  deleteTodo: function (todoId, event) {
+    console.log(this);
+    event.preventDefault();
+    TodoActionCreator.deleteTodo(todoId);
+    toastr.success('Todo Deleted...hooray...');
   },
 
   render: function () {

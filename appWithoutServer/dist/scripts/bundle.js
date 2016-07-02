@@ -52614,16 +52614,18 @@ var toastr = require('toastr');
 
 var TodoList = React.createClass({displayName: "TodoList",
 
-  deleteTodo: function (todoId, event) {
-    event.preventDefault();
-    TodoActionCreator.deleteTodo(todoId);
-    toastr.success('Todo Deleted...hooray...');
-  },
 
   updateTodo: function (todo, event) {
     event.preventDefault();
     TodoActionCreator.updateTodo(todo, true);
     toastr.success('Todo Completed.');
+  },
+  
+  deleteTodo: function (todoId, event) {
+    console.log(this);
+    event.preventDefault();
+    TodoActionCreator.deleteTodo(todoId);
+    toastr.success('Todo Deleted...hooray...');
   },
 
   render: function () {
@@ -52696,7 +52698,8 @@ var Todos = React.createClass({displayName: "Todos",
   componentWillUnmount: function () {
     TodoStore.removeChangeListener(this.onChange);
   },
-  
+
+
   onChange: function () {
     this.setState({
       todos: TodoStore.getAllTodos()
@@ -52708,7 +52711,10 @@ var Todos = React.createClass({displayName: "Todos",
       React.createElement("div", null, 
         React.createElement("h2", null, "Things we need to get done"), 
         React.createElement(Link, {className: "btn btn-success btn-sm", to: "/manage-todo"}, "Add a Todo"), 
-        React.createElement(TodoList, {todos: this.state.todos})
+        React.createElement(TodoList, {
+          todos: this.state.todos, 
+          deleteTodo: this.deleteTodo}
+        )
       )
     );
   }
