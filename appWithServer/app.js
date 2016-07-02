@@ -28,8 +28,8 @@ app.use(morgan('dev'))
 //app.use(passport.initialize())
 app.use(skipper())
 
-// app.use('/todos', require('./server/todo/routes'))
-// app.use('/users', require('./server/user/routes'))
+app.use('/todos', require('./server/todo/routes'))
+app.use('/users', require('./server/user/routes'))
 
 app.all('/', function (req, res) {
   res.render('index.html')
