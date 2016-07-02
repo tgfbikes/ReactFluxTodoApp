@@ -1,18 +1,21 @@
 'use strict';
 
 var Dispatcher = require('../dispatcher/Dispatcher');
-var todoApi = require('../mockApi/todoApi');
 var ActionTypes = require('../constants/actionTypes');
+var API = require('../helpers/api');
 
 var TodoActionCreator = {
   // the actual action creator
   createTodo: function (todo) {
-    var newTodo = todoApi.saveTodo(todo); // Will be AJAX call in real life
+    var newTodoPromise = API.createTodo(todo);
     
-    Dispatcher.dispatch({
-      actionType: ActionTypes.CREATE_TODO,  // This payload is the actual action
-      todo: newTodo
-    });
+    newTodoPromise
+      .then(function (newTodo) {
+        Dispatcher.dispatch({
+          actionType: ActionTypes.CREATE_TODO,  // This payload is the actual action
+          todo: newTodo
+        });
+      });
   },
 
   updateTodo: function (todo, changeStatus) {

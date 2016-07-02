@@ -30,18 +30,21 @@ module.exports = InitializeActionCreator;
 'use strict';
 
 var Dispatcher = require('../dispatcher/Dispatcher');
-var todoApi = require('../mockApi/todoApi');
 var ActionTypes = require('../constants/actionTypes');
+var API = require('../helpers/api');
 
 var TodoActionCreator = {
   // the actual action creator
   createTodo: function (todo) {
-    var newTodo = todoApi.saveTodo(todo); // Will be AJAX call in real life
+    var newTodoPromise = API.createTodo(todo);
     
-    Dispatcher.dispatch({
-      actionType: ActionTypes.CREATE_TODO,  // This payload is the actual action
-      todo: newTodo
-    });
+    newTodoPromise
+      .then(function (newTodo) {
+        Dispatcher.dispatch({
+          actionType: ActionTypes.CREATE_TODO,  // This payload is the actual action
+          todo: newTodo
+        });
+      });
   },
 
   updateTodo: function (todo, changeStatus) {
@@ -66,7 +69,7 @@ var TodoActionCreator = {
 
 module.exports = TodoActionCreator;
 
-},{"../constants/actionTypes":13,"../dispatcher/Dispatcher":14,"../mockApi/todoApi":18}],3:[function(require,module,exports){
+},{"../constants/actionTypes":13,"../dispatcher/Dispatcher":14,"../helpers/api":16}],3:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -545,7 +548,8 @@ module.exports = ajax;
 var ajax = require('./ajax');
 
 module.exports = {
-  getAllTodos: getAllTodos
+  getAllTodos: getAllTodos,
+  createTodo: createTodo
 };
 
 function getAllTodos () {
@@ -554,6 +558,13 @@ function getAllTodos () {
   var method = 'GET';
 
   return ajax(url, data, method);
+}
+
+function createTodo (todo) {
+  var url = '/todos';
+  var data = todo;
+
+  return ajax(url, data);
 }
 
 },{"./ajax":15}],17:[function(require,module,exports){
