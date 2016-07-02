@@ -10,7 +10,12 @@ var InitializeActionCreator = {
   initializeApp: function () {
     var todosPromise = API.getAllTodos();
     
-    todosPromise.then(function (todos) {
+    todosPromise
+      .then(function (todos) {
+        console.log(todos);
+        return todos;
+      })
+      .then(function (todos) {
       Dispatcher.dispatch({
         actionType: ActionTypes.INITIALIZE,
         initialData: {
