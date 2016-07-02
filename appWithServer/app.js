@@ -14,17 +14,19 @@ require('./server/config/passport')
 
 var app = express()
 
+app.use(express.static(__dirname + '/dist'))
+
 app.use(morgan('dev'))
 //app.use(passport.initialize())
 app.use(skipper())
 
-app.use('/todos', require('./server/todo/routes'))
-app.use('/users', require('./server/user/routes'))
+// app.use('/todos', require('./server/todo/routes'))
+// app.use('/users', require('./server/user/routes'))
 
 app.all('/', function (req, res) {
-	res.end('You have made it to day 2!')
+  res.render('index.html')
 })
 
-app.listen(8062, function () {
-	console.log('Listening on localhost:8062')
+app.listen(9005, function () {
+	console.log('Listening on localhost:9005')
 })
