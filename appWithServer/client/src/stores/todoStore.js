@@ -43,7 +43,7 @@ Dispatcher.register(function (action) {
       TodoStore.emitChange();
       break;
     case ActionTypes.UPDATE_TODO:
-      var existingTodo = _.find(_todos, {id: action.todo.id});
+      var existingTodo = _.find(_todos, {_id: action.todo._id});
       var existingTodoIndex = _.indexOf(_todos, existingTodo);
       _todos.splice(existingTodoIndex, 1, action.todo);
       TodoStore.emitChange();
