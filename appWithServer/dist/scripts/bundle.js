@@ -13,17 +13,13 @@ var InitializeActionCreator = {
     
     todosPromise
       .then(function (todos) {
-        console.log(todos);
-        return todos;
-      })
-      .then(function (todos) {
-      Dispatcher.dispatch({
-        actionType: ActionTypes.INITIALIZE,
-        initialData: {
-          todos: todos
-        }
+        Dispatcher.dispatch({
+          actionType: ActionTypes.INITIALIZE,
+          initialData: {
+            todos: todos
+          }
+        });
       });
-    });
   }
   
 };
