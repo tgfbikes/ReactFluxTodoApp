@@ -118,7 +118,7 @@ var Home = React.createClass({displayName: "Home",
         React.createElement("div", {className: "jumbotron"}, 
           React.createElement("h1", null, "Torpedos"), 
           React.createElement("p", null, "Let's sink some tasks"), 
-          React.createElement(Link, {className: "btn btn-info btn-lg", to: "/about"}, "Learn more")
+          React.createElement(Link, {className: "btn btn-info btn-lg", to: "/about-page"}, "Learn more")
         ), 
         React.createElement("div", null, 
           React.createElement("h2", null, "Details about the app"), 
@@ -178,8 +178,8 @@ var Header = React.createClass({displayName: "Header",
           ), 
           React.createElement("ul", {className: "nav navbar-nav"}, 
             React.createElement("li", null, React.createElement(Link, {to: "/"}, "Home")), 
-            React.createElement("li", null, React.createElement(Link, {to: "/todos"}, "Todos")), 
-            React.createElement("li", null, React.createElement(Link, {to: "/about"}, "About"))
+            React.createElement("li", null, React.createElement(Link, {to: "/todo-page"}, "Todos")), 
+            React.createElement("li", null, React.createElement(Link, {to: "/about-page"}, "About"))
           )
         )
       )
@@ -229,7 +229,8 @@ module.exports = TextInput;
 'use strict';
 
 var React = require('react');
-var hashHistory = require('react-router').hashHistory;
+// var hashHistory = require('react-router').hashHistory;
+var browserHistory = require('react-router').browserHistory;
 var TodoForm = require('./TodoForm');
 var TodoActionCreator = require('../../actions/todoActionCreator');
 var TodoStore = require('../../stores/todoStore');
@@ -315,7 +316,7 @@ var ManageTodoPage = React.createClass({displayName: "ManageTodoPage",
     }
     
     toastr.success('Todo Saved');
-    hashHistory.push('/todos');
+    browserHistory.push('/todo-page');
   },
   
   render: function () {
@@ -522,7 +523,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Router = require('react-router').Router;
 var routes = require('./routes');
-var hashHistory = require('react-router').hashHistory;
+// var hashHistory = require('react-router').hashHistory;
+var browserHistory = require('react-router').browserHistory;
 var InitializeActionCreator = require('./actions/initializeActionCreator');
 
 InitializeActionCreator.initializeApp();
@@ -531,7 +533,7 @@ InitializeActionCreator.initializeApp();
 // var browserHistory = require('react-router').browserHistory;
 
 ReactDOM.render(
-  React.createElement(Router, {history: hashHistory}, 
+  React.createElement(Router, {history: browserHistory}, 
     routes
   )
 , document.getElementById('app')
@@ -648,8 +650,8 @@ var NotFoundPage = require('./components/404NotFound');
 var routes = (
   React.createElement(Route, {path: "/", component: App}, 
     React.createElement(IndexRoute, {component: HomePage}), 
-    React.createElement(Route, {path: "/todos", component: TodoPage}), 
-    React.createElement(Route, {path: "/about", component: AboutPage}), 
+    React.createElement(Route, {path: "/todo-page", component: TodoPage}), 
+    React.createElement(Route, {path: "/about-page", component: AboutPage}), 
     React.createElement(Route, {path: "/manage-todo", component: ManageTodoPage}), 
     React.createElement(Route, {path: "/manage-todo/:id", component: ManageTodoPage}), 
     React.createElement(Route, {path: "*", component: NotFoundPage})

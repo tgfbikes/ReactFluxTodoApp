@@ -4,6 +4,7 @@ var morgan = require('morgan')
 var passport = require('passport')
 var skipper = require('skipper')
 var colors = require('colors')
+var path = require('path')
 
 // Configure Mongoose
 
@@ -31,8 +32,8 @@ app.use(skipper())
 app.use('/todos', require('./server/todo/routes'))
 app.use('/users', require('./server/user/routes'))
 
-app.all('/', function (req, res) {
-  res.render('index.html')
+app.all('*', function (req, res) {
+  res.sendFile(path.join(__dirname, '/dist/index.html'))
 })
 
 app.listen(9005, function () {
