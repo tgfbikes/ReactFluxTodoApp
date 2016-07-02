@@ -3,7 +3,7 @@ var express = require('express')
 var passport = require('passport')
 var router = express.Router()
 
-router.use(passport.authenticate('basic', { session: false }))
+//router.use(passport.authenticate('basic', { session: false }))
 
 router.get('/', controller.index)
 router.post('/', controller.create)
