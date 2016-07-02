@@ -16,7 +16,6 @@ var ManageTodoPage = React.createClass({
     return {
       errors: {},
       todo: {
-        id: '',
         title: '',
         description: '',
         completed: false
@@ -29,7 +28,6 @@ var ManageTodoPage = React.createClass({
     if (todoId) {
       this.setState({
         todo: TodoStore.getTodoById(todoId)
-        // todo: TodoStore.getTodoById(todoId)
       });
     }
   },
