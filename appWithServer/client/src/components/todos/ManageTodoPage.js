@@ -79,7 +79,7 @@ var ManageTodoPage = React.createClass({
       return;
     }
     
-    if (this.state.todo.id) {
+    if (this.state.todo._id) {
       TodoActionCreator.updateTodo(this.state.todo);
     } else {
       TodoActionCreator.createTodo(this.state.todo);
