@@ -10,7 +10,7 @@ var Home = React.createClass({
         <div className="jumbotron">
           <h1>Torpedos</h1>
           <p>Let's sink some tasks</p>
-          <Link className="btn btn-info btn-lg" to="/about">Learn more</Link>
+          <Link className="btn btn-info btn-lg" to="/about-page">Learn more</Link>
         </div>
         <div>
           <h2>Details about the app</h2>

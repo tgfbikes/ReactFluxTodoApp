@@ -88,7 +88,7 @@ var ManageTodoPage = React.createClass({
     }
     
     toastr.success('Todo Saved');
-    browserHistory.push('/todos');
+    browserHistory.push('/todo-page');
   },
   
   render: function () {
