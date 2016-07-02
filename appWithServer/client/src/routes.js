@@ -13,8 +13,8 @@ var NotFoundPage = require('./components/404NotFound');
 var routes = (
   <Route path="/" component={App}>
     <IndexRoute component={HomePage} />
-    <Route path="/todos" component={TodoPage} />
-    <Route path="/about" component={AboutPage} />
+    <Route path="/todo-page" component={TodoPage} />
+    <Route path="/about-page" component={AboutPage} />
     <Route path="/manage-todo" component={ManageTodoPage} />
     <Route path="/manage-todo/:id" component={ManageTodoPage} />
     <Route path="*" component={NotFoundPage} />
