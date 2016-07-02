@@ -250,7 +250,6 @@ var ManageTodoPage = React.createClass({displayName: "ManageTodoPage",
     return {
       errors: {},
       todo: {
-        id: '',
         title: '',
         description: '',
         completed: false
@@ -263,7 +262,6 @@ var ManageTodoPage = React.createClass({displayName: "ManageTodoPage",
     if (todoId) {
       this.setState({
         todo: TodoStore.getTodoById(todoId)
-        // todo: TodoStore.getTodoById(todoId)
       });
     }
   },
@@ -388,6 +386,7 @@ var React = require('react');
 var Link = require('react-router').Link;
 var TodoActionCreator = require('../../actions/todoActionCreator');
 var toastr = require('toastr');
+var TodoStore = require('../../stores/todoStore');
 
 
 var TodoList = React.createClass({displayName: "TodoList",
@@ -420,11 +419,11 @@ var TodoList = React.createClass({displayName: "TodoList",
         }
       };
       return (
-        React.createElement("tr", {key: todo.id}, 
-          React.createElement("td", null, todo.id), 
-          React.createElement("td", null, React.createElement(Link, {to: '/manage-todo/' + todo.id}, todo.title)), 
+        React.createElement("tr", {key: todo._id}, 
+          React.createElement("td", null, todo._id), 
+          React.createElement("td", null, React.createElement(Link, {to: '/manage-todo/' + todo._id}, todo.title)), 
           React.createElement("td", null, getDescription()), 
-          React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.deleteTodo.bind(this, todo.id)}, "Delete")), 
+          React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.deleteTodo.bind(this, todo._id)}, "Delete")), 
           React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.updateTodo.bind(this, todo)}, "Mark as Done"))
         )
       );
@@ -450,7 +449,7 @@ var TodoList = React.createClass({displayName: "TodoList",
 
 module.exports = TodoList;
 
-},{"../../actions/todoActionCreator":2,"react":258,"react-router":59,"toastr":259}],12:[function(require,module,exports){
+},{"../../actions/todoActionCreator":2,"../../stores/todoStore":21,"react":258,"react-router":59,"toastr":259}],12:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -734,7 +733,7 @@ var TodoStore = Object.assign({}, EventEmitter.prototype, {
   },
 
   getTodoById: function (id) {
-    return _.find(_todos, {id : id});
+    return _.find(_todos, {_id : id});
   }
 
 });

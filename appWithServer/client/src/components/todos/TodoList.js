@@ -4,6 +4,7 @@ var React = require('react');
 var Link = require('react-router').Link;
 var TodoActionCreator = require('../../actions/todoActionCreator');
 var toastr = require('toastr');
+var TodoStore = require('../../stores/todoStore');
 
 
 var TodoList = React.createClass({
@@ -36,11 +37,11 @@ var TodoList = React.createClass({
         }
       };
       return (
-        <tr key={todo.id}>
-          <td>{todo.id}</td>
-          <td><Link to={'/manage-todo/' + todo.id}>{todo.title}</Link></td>
+        <tr key={todo._id}>
+          <td>{todo._id}</td>
+          <td><Link to={'/manage-todo/' + todo._id}>{todo.title}</Link></td>
           <td>{getDescription()}</td>
-          <td><a href="#" onClick={this.deleteTodo.bind(this, todo.id)}>Delete</a></td>
+          <td><a href="#" onClick={this.deleteTodo.bind(this, todo._id)}>Delete</a></td>
           <td><a href="#" onClick={this.updateTodo.bind(this, todo)}>Mark as Done</a></td>
         </tr>
       );
