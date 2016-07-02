@@ -61,4 +61,4 @@ gulp.task('watch', function () {
 });
 
 // Default task
-gulp.task('default', ['html', 'css', 'js', 'watch']);
+gulp.task('default', ['html', 'css', 'images', 'js', 'watch']);
