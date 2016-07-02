@@ -6,7 +6,14 @@ var skipper = require('skipper')
 
 // Configure Mongoose
 
-mongoose.connect('mongodb://mongodb.cs.dixie.edu/SudoBashBash')
+// mongoose.connect('mongodb://mongodb.cs.dixie.edu/SudoBashBash')
+mongoose.connect('mongodb://localhost/todos')
+mongoose.connection.on('connected', function () {
+  console.log('Mongoose connected...')
+})
+mongoose.connection.on('error', function (err) {
+  console.log('Mongoose connection failed...Error:' + err)
+})
 
 require('./server/config/passport')
 
