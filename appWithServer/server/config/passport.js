@@ -1,6 +1,6 @@
 var passport = require('passport')
 var BasicStrategy = require('passport-http').BasicStrategy
-var User = require('./model')
+var User = require('../user/model')
 
 passport.use(new BasicStrategy(
 	function (email, password, next)
