@@ -3,7 +3,8 @@
 var ajax = require('./ajax');
 
 module.exports = {
-  getAllTodos: getAllTodos
+  getAllTodos: getAllTodos,
+  createTodo: createTodo
 };
 
 function getAllTodos () {
@@ -12,4 +13,11 @@ function getAllTodos () {
   var method = 'GET';
 
   return ajax(url, data, method);
+}
+
+function createTodo (todo) {
+  var url = '/todos';
+  var data = todo;
+
+  return ajax(url, data);
 }
