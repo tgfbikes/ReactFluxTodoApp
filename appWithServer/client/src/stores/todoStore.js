@@ -27,7 +27,7 @@ var TodoStore = Object.assign({}, EventEmitter.prototype, {
   },
 
   getTodoById: function (id) {
-    return _.find(_todos, {id : id});
+    return _.find(_todos, {_id : id});
   }
 
 });
