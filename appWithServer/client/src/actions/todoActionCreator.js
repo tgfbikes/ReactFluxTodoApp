@@ -18,14 +18,16 @@ var TodoActionCreator = {
       });
   },
 
-  updateTodo: function (todo, changeStatus) {
-    var change = changeStatus || false;
-    var updatedTodo = todoApi.saveTodo(todo, change); 
+  updateTodo: function (todo) {
+    var updatedTodoPromise = API.updateTodo(todo);
 
-    Dispatcher.dispatch({
-      actionType: ActionTypes.UPDATE_TODO,  
-      todo: updatedTodo
-    });
+    updatedTodoPromise
+      .then(function (updatedTodo) {
+        Dispatcher.dispatch({
+          actionType: ActionTypes.UPDATE_TODO,
+          todo: updatedTodo
+        });
+      });
   },
   
   deleteTodo: function (todo) {
