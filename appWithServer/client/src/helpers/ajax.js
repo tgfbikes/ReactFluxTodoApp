@@ -2,22 +2,18 @@
 
 var $ = require('jquery');
 
-var ajax = function (url, data, success, error, type='POST') {
+var ajax = function (url, data, type='POST') {
 
-  $.ajax({
+  return $.ajax({
     url: 'http://localhost:9005' + url,
     datatype: 'json',
     contentType: 'application/json',
     type: type,
     data: JSON.stringify(data),
-    success: function (data) {
-      success(data);
-    },
-    error: function (xhr, status, err) {
-      error(xhr, status, err);
-    }
+  })
+  .fail(function (xhr, status, err) {
+    console.log('Get all todos failed!!!')
   });
-
 };
 
 module.exports = ajax;

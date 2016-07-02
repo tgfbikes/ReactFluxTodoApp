@@ -2,19 +2,25 @@
 
 
 var Dispatcher = require('../dispatcher/Dispatcher');
-var todoApi = require('../mockApi/todoApi');
+var API = require('../helpers/api');
 var ActionTypes = require('../constants/actionTypes');
 
 var InitializeActionCreator = {
+  
   initializeApp: function () {
-
-    Dispatcher.dispatch({
-      actionType: ActionTypes.INITIALIZE,
-      initialData: {
-        todos: todoApi.getAllTodos()
-      }
-    });
+    var todosPromise = API.getAllTodos();
+    
+    todosPromise
+      .then(function (todos) {
+        Dispatcher.dispatch({
+          actionType: ActionTypes.INITIALIZE,
+          initialData: {
+            todos: todos
+          }
+        });
+      });
   }
+  
 };
 
 module.exports = InitializeActionCreator;
