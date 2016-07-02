@@ -3,16 +3,17 @@ var mongoose = require('mongoose')
 var morgan = require('morgan')
 var passport = require('passport')
 var skipper = require('skipper')
+var colors = require('colors')
 
 // Configure Mongoose
 
 // mongoose.connect('mongodb://mongodb.cs.dixie.edu/SudoBashBash')
 mongoose.connect('mongodb://localhost/todos')
 mongoose.connection.on('connected', function () {
-  console.log('Mongoose connected...')
+  console.log('Mongoose connected...'.green)
 })
 mongoose.connection.on('error', function (err) {
-  console.log('Mongoose connection failed...Error:' + err)
+  console.log('Mongoose connection failed... \n'.red + err)
 })
 
 require('./server/config/passport')
@@ -35,5 +36,5 @@ app.all('/', function (req, res) {
 })
 
 app.listen(9005, function () {
-	console.log('Listening on localhost:9005')
+	console.log('Listening on localhost:9005'.rainbow)
 })
