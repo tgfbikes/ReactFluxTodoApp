@@ -47,14 +47,16 @@ var TodoActionCreator = {
       });
   },
 
-  updateTodo: function (todo, changeStatus) {
-    var change = changeStatus || false;
-    var updatedTodo = todoApi.saveTodo(todo, change); 
+  updateTodo: function (todo) {
+    var updatedTodoPromise = API.updateTodo(todo);
 
-    Dispatcher.dispatch({
-      actionType: ActionTypes.UPDATE_TODO,  
-      todo: updatedTodo
-    });
+    updatedTodoPromise
+      .then(function (updatedTodo) {
+        Dispatcher.dispatch({
+          actionType: ActionTypes.UPDATE_TODO,
+          todo: updatedTodo
+        });
+      });
   },
   
   deleteTodo: function (todo) {
@@ -400,7 +402,12 @@ var TodoList = React.createClass({displayName: "TodoList",
 
   updateTodo: function (todo, event) {
     event.preventDefault();
-    TodoActionCreator.updateTodo(todo, true);
+    if (todo.completed) {
+      todo.completed = false;
+    } else {
+      todo.completed = true;
+    }
+    TodoActionCreator.updateTodo(todo);
     toastr.success('Todo Completed.');
   },
   
@@ -413,7 +420,7 @@ var TodoList = React.createClass({displayName: "TodoList",
   render: function () {
     var createTodoRow = function (todo) {
       var getDescription = function () {
-        if (todo.done) {
+        if (todo.completed) {
           return (
             React.createElement("s", null, todo.description)
           );
@@ -552,7 +559,8 @@ var ajax = require('./ajax');
 module.exports = {
   getAllTodos: getAllTodos,
   createTodo: createTodo,
-  deleteTodo: deleteTodo
+  deleteTodo: deleteTodo,
+  updateTodo: updateTodo
 };
 
 function getAllTodos () {
@@ -574,6 +582,14 @@ function deleteTodo(todo) {
   var url = '/todos/' + todo._id;
   var data = {};
   var method = 'DELETE';
+
+  return ajax(url, data, method);
+}
+
+function updateTodo(todo) {
+  var url = '/todos/' + todo._id;
+  var data = todo; 
+  var method = 'PUT';
 
   return ajax(url, data, method);
 }
@@ -771,7 +787,7 @@ Dispatcher.register(function (action) {
       TodoStore.emitChange();
       break;
     case ActionTypes.UPDATE_TODO:
-      var existingTodo = _.find(_todos, {id: action.todo.id});
+      var existingTodo = _.find(_todos, {_id: action.todo._id});
       var existingTodoIndex = _.indexOf(_todos, existingTodo);
       _todos.splice(existingTodoIndex, 1, action.todo);
       TodoStore.emitChange();

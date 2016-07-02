@@ -12,7 +12,12 @@ var TodoList = React.createClass({
 
   updateTodo: function (todo, event) {
     event.preventDefault();
-    TodoActionCreator.updateTodo(todo, true);
+    if (todo.completed) {
+      todo.completed = false;
+    } else {
+      todo.completed = true;
+    }
+    TodoActionCreator.updateTodo(todo);
     toastr.success('Todo Completed.');
   },
   
@@ -25,7 +30,7 @@ var TodoList = React.createClass({
   render: function () {
     var createTodoRow = function (todo) {
       var getDescription = function () {
-        if (todo.done) {
+        if (todo.completed) {
           return (
             <s>{todo.description}</s>
           );
