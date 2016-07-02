@@ -57,13 +57,16 @@ var TodoActionCreator = {
     });
   },
   
-  deleteTodo: function (todoId) {
-    todoApi.deleteTodo(todoId);
+  deleteTodo: function (todo) {
+    var deleteTodoPromise = API.deleteTodo(todo);
 
-    Dispatcher.dispatch({
-      actionType: ActionTypes.DELETE_TODO,
-      todoId: todoId 
-    });
+    deleteTodoPromise
+      .then(function () {
+        Dispatcher.dispatch({
+          actionType: ActionTypes.DELETE_TODO,
+          todoId: todo._id
+        });
+      });
   }
 };
 
@@ -401,10 +404,9 @@ var TodoList = React.createClass({displayName: "TodoList",
     toastr.success('Todo Completed.');
   },
   
-  deleteTodo: function (todoId, event) {
-    console.log(this);
+  deleteTodo: function (todo, event) {
     event.preventDefault();
-    TodoActionCreator.deleteTodo(todoId);
+    TodoActionCreator.deleteTodo(todo);
     toastr.success('Todo Deleted...hooray...');
   },
 
@@ -426,7 +428,7 @@ var TodoList = React.createClass({displayName: "TodoList",
           React.createElement("td", null, todo._id), 
           React.createElement("td", null, React.createElement(Link, {to: '/manage-todo/' + todo._id}, todo.title)), 
           React.createElement("td", null, getDescription()), 
-          React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.deleteTodo.bind(this, todo._id)}, "Delete")), 
+          React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.deleteTodo.bind(this, todo)}, "Delete")), 
           React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.updateTodo.bind(this, todo)}, "Mark as Done"))
         )
       );
@@ -549,7 +551,8 @@ var ajax = require('./ajax');
 
 module.exports = {
   getAllTodos: getAllTodos,
-  createTodo: createTodo
+  createTodo: createTodo,
+  deleteTodo: deleteTodo
 };
 
 function getAllTodos () {
@@ -565,6 +568,14 @@ function createTodo (todo) {
   var data = todo;
 
   return ajax(url, data);
+}
+
+function deleteTodo(todo) {
+  var url = '/todos/' + todo._id;
+  var data = {};
+  var method = 'DELETE';
+
+  return ajax(url, data, method);
 }
 
 },{"./ajax":15}],17:[function(require,module,exports){
@@ -766,7 +777,7 @@ Dispatcher.register(function (action) {
       TodoStore.emitChange();
       break;
     case ActionTypes.DELETE_TODO:
-      _.remove(_todos, {id: action.todoId});
+      _.remove(_todos, {_id: action.todoId});
       TodoStore.emitChange();
       break;
     default:

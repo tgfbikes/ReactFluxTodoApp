@@ -16,10 +16,9 @@ var TodoList = React.createClass({
     toastr.success('Todo Completed.');
   },
   
-  deleteTodo: function (todoId, event) {
-    console.log(this);
+  deleteTodo: function (todo, event) {
     event.preventDefault();
-    TodoActionCreator.deleteTodo(todoId);
+    TodoActionCreator.deleteTodo(todo);
     toastr.success('Todo Deleted...hooray...');
   },
 
@@ -41,7 +40,7 @@ var TodoList = React.createClass({
           <td>{todo._id}</td>
           <td><Link to={'/manage-todo/' + todo._id}>{todo.title}</Link></td>
           <td>{getDescription()}</td>
-          <td><a href="#" onClick={this.deleteTodo.bind(this, todo._id)}>Delete</a></td>
+          <td><a href="#" onClick={this.deleteTodo.bind(this, todo)}>Delete</a></td>
           <td><a href="#" onClick={this.updateTodo.bind(this, todo)}>Mark as Done</a></td>
         </tr>
       );
