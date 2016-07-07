@@ -28,6 +28,7 @@ var TodoList = React.createClass({
   },
 
   render: function () {
+    var output;
     var createTodoRow = function (todo) {
       var getDescription = function () {
         if (todo.completed) {
@@ -50,6 +51,14 @@ var TodoList = React.createClass({
         </tr>
       );
     };
+    
+    if (this.props.todos.length > 0) {
+      output = this.props.todos.map(createTodoRow, this);
+    } else {
+      output = (
+        <tr><td>You have nothing to do</td></tr>
+      );
+    }
 
     return (
         <table className="table">
@@ -61,7 +70,7 @@ var TodoList = React.createClass({
             </tr>
           </thead>
           <tbody>
-            {this.props.todos.map(createTodoRow, this)}
+            {output}
           </tbody>
         </table>
     );

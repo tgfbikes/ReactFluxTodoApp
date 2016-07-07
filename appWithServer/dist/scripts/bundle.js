@@ -418,6 +418,7 @@ var TodoList = React.createClass({displayName: "TodoList",
   },
 
   render: function () {
+    var output;
     var createTodoRow = function (todo) {
       var getDescription = function () {
         if (todo.completed) {
@@ -440,6 +441,14 @@ var TodoList = React.createClass({displayName: "TodoList",
         )
       );
     };
+    
+    if (this.props.todos.length > 0) {
+      output = this.props.todos.map(createTodoRow, this);
+    } else {
+      output = (
+        React.createElement("tr", null, React.createElement("td", null, "You have nothing to do"))
+      );
+    }
 
     return (
         React.createElement("table", {className: "table"}, 
@@ -451,7 +460,7 @@ var TodoList = React.createClass({displayName: "TodoList",
             )
           ), 
           React.createElement("tbody", null, 
-            this.props.todos.map(createTodoRow, this)
+            output
           )
         )
     );
