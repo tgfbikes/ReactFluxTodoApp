@@ -249,7 +249,6 @@ var TodoForm = require('./TodoForm');
 var TodoActionCreator = require('../../actions/todoActionCreator');
 var TodoStore = require('../../stores/todoStore');
 var todoApi = require('../../mockApi/todoApi');
-var toastr = require('toastr');
 
 
 var ManageTodoPage = React.createClass({displayName: "ManageTodoPage",
@@ -327,7 +326,6 @@ var ManageTodoPage = React.createClass({displayName: "ManageTodoPage",
       TodoActionCreator.createTodo(this.state.todo);
     }
     
-    toastr.success('Todo Saved');
     browserHistory.push('/todo-page');
   },
   
@@ -349,7 +347,7 @@ var ManageTodoPage = React.createClass({displayName: "ManageTodoPage",
 
 module.exports = ManageTodoPage;
 
-},{"../../actions/todoActionCreator":2,"../../mockApi/todoApi":18,"../../stores/todoStore":21,"./TodoForm":10,"react":258,"react-router":59,"toastr":259}],10:[function(require,module,exports){
+},{"../../actions/todoActionCreator":2,"../../mockApi/todoApi":18,"../../stores/todoStore":21,"./TodoForm":10,"react":258,"react-router":59}],10:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -414,7 +412,6 @@ var TodoList = React.createClass({displayName: "TodoList",
   deleteTodo: function (todo, event) {
     event.preventDefault();
     TodoActionCreator.deleteTodo(todo);
-    toastr.success('Todo Deleted...hooray...');
   },
 
   render: function () {
@@ -756,6 +753,7 @@ module.exports = routes;
 var Dispatcher = require('../dispatcher/Dispatcher');
 var ActionTypes = require('../constants/actionTypes');
 var EventEmitter = require('events').EventEmitter;
+var toastr = require('toastr');
 var _ = require('lodash');
 var CHANGE_EVENT = 'change';
 
@@ -793,16 +791,19 @@ Dispatcher.register(function (action) {
       break;
     case ActionTypes.CREATE_TODO:
       _todos.push(action.todo);
+      toastr.success('Todo Created');
       TodoStore.emitChange();
       break;
     case ActionTypes.UPDATE_TODO:
       var existingTodo = _.find(_todos, {_id: action.todo._id});
       var existingTodoIndex = _.indexOf(_todos, existingTodo);
       _todos.splice(existingTodoIndex, 1, action.todo);
+      toastr.info('Todo Updated');
       TodoStore.emitChange();
       break;
     case ActionTypes.DELETE_TODO:
       _.remove(_todos, {_id: action.todoId});
+      toastr.error('Todo Deleted...hooray...');
       TodoStore.emitChange();
       break;
     default:
@@ -812,7 +813,7 @@ Dispatcher.register(function (action) {
 
 module.exports = TodoStore;
 
-},{"../constants/actionTypes":13,"../dispatcher/Dispatcher":14,"events":22,"lodash":28}],22:[function(require,module,exports){
+},{"../constants/actionTypes":13,"../dispatcher/Dispatcher":14,"events":22,"lodash":28,"toastr":259}],22:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
