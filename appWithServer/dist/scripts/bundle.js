@@ -419,15 +419,20 @@ var TodoList = React.createClass({displayName: "TodoList",
     var createTodoRow = function (todo) {
       var tdClass = '';
       var isDone = 'Mark as Done';
+      var todoTitle = todo.title;
+      var todoDescription = todo.description;
+      
       if (todo.completed) {
         tdClass = 'todo-done';
         isDone = 'Mark as Not Done';
+        todoTitle = (React.createElement("s", null, todo.title));
+        todoDescription = (React.createElement("s", null, todo.description));
       }
+      
       return (
         React.createElement("tr", {key: todo._id}, 
-          React.createElement("td", {className: tdClass}, todo._id), 
-          React.createElement("td", {className: tdClass}, React.createElement(Link, {to: '/manage-todo/' + todo._id}, todo.title)), 
-          React.createElement("td", {className: tdClass}, todo.description), 
+          React.createElement("td", {className: tdClass}, React.createElement(Link, {to: '/manage-todo/' + todo._id}, todoTitle)), 
+          React.createElement("td", {className: tdClass}, todoDescription), 
           React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.deleteTodo.bind(this, todo)}, "Delete")), 
           React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.updateTodo.bind(this, todo)}, isDone))
         )
@@ -446,9 +451,10 @@ var TodoList = React.createClass({displayName: "TodoList",
         React.createElement("table", {className: "table"}, 
           React.createElement("thead", null, 
             React.createElement("tr", null, 
-              React.createElement("th", null, "ID"), 
               React.createElement("th", null, "Title"), 
-              React.createElement("th", null, "Description")
+              React.createElement("th", null, "Description"), 
+              React.createElement("th", null), 
+              React.createElement("th", null)
             )
           ), 
           React.createElement("tbody", null, 
