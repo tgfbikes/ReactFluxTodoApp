@@ -24,7 +24,6 @@ var TodoList = React.createClass({
   deleteTodo: function (todo, event) {
     event.preventDefault();
     TodoActionCreator.deleteTodo(todo);
-    toastr.success('Todo Deleted...hooray...');
   },
 
   render: function () {
