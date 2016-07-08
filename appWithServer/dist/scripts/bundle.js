@@ -5,6 +5,7 @@
 var Dispatcher = require('../dispatcher/Dispatcher');
 var API = require('../helpers/api');
 var ActionTypes = require('../constants/actionTypes');
+var toastr = require('toastr');
 
 var InitializeActionCreator = {
   
@@ -19,6 +20,9 @@ var InitializeActionCreator = {
             todos: todos
           }
         });
+      })
+      .fail(function (xhr, status, err) {
+        toastr.error('Something went wrong', 'ERROR');
       });
   }
   
@@ -26,12 +30,13 @@ var InitializeActionCreator = {
 
 module.exports = InitializeActionCreator;
 
-},{"../constants/actionTypes":13,"../dispatcher/Dispatcher":14,"../helpers/api":16}],2:[function(require,module,exports){
+},{"../constants/actionTypes":13,"../dispatcher/Dispatcher":14,"../helpers/api":16,"toastr":259}],2:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('../dispatcher/Dispatcher');
 var ActionTypes = require('../constants/actionTypes');
 var API = require('../helpers/api');
+var toastr = require('toastr');
 
 var TodoActionCreator = {
   // the actual action creator
@@ -39,11 +44,15 @@ var TodoActionCreator = {
     var newTodoPromise = API.createTodo(todo);
     
     newTodoPromise
-      .then(function (newTodo) {
+      .done(function (newTodo) {
+        console.log(newTodo);
         Dispatcher.dispatch({
           actionType: ActionTypes.CREATE_TODO,  // This payload is the actual action
           todo: newTodo
         });
+      })
+      .fail(function (xhr, status, err) {
+        toastr.error('Create todo failed', 'CREATE ERROR');
       });
   },
 
@@ -51,11 +60,14 @@ var TodoActionCreator = {
     var updatedTodoPromise = API.updateTodo(todo);
 
     updatedTodoPromise
-      .then(function (updatedTodo) {
+      .done(function (updatedTodo) {
         Dispatcher.dispatch({
           actionType: ActionTypes.UPDATE_TODO,
           todo: updatedTodo
         });
+      })
+      .fail(function (xhr, status, err) {
+        toastr.error('Update todo failed', 'UPDATE ERROR');
       });
   },
   
@@ -63,18 +75,21 @@ var TodoActionCreator = {
     var deleteTodoPromise = API.deleteTodo(todo);
 
     deleteTodoPromise
-      .then(function () {
+      .done(function () {
         Dispatcher.dispatch({
           actionType: ActionTypes.DELETE_TODO,
           todoId: todo._id
         });
+      })
+      .fail(function (xhr, status, err) {
+        toastr.error('Delete todo failed', 'DELETE ERROR');
       });
   }
 };
 
 module.exports = TodoActionCreator;
 
-},{"../constants/actionTypes":13,"../dispatcher/Dispatcher":14,"../helpers/api":16}],3:[function(require,module,exports){
+},{"../constants/actionTypes":13,"../dispatcher/Dispatcher":14,"../helpers/api":16,"toastr":259}],3:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -400,11 +415,7 @@ var TodoList = React.createClass({displayName: "TodoList",
 
   updateTodo: function (todo, event) {
     event.preventDefault();
-    if (todo.completed) {
-      todo.completed = false;
-    } else {
-      todo.completed = true;
-    }
+    todo.completed ? todo.completed = false : todo.completed = true;
     TodoActionCreator.updateTodo(todo);
   },
   
@@ -550,9 +561,6 @@ var ajax = function (url, data, type='POST') {
     contentType: 'application/json',
     type: type,
     data: JSON.stringify(data),
-  })
-  .fail(function (xhr, status, err) {
-    console.log('Get all todos failed!!!')
   });
 };
 
@@ -792,19 +800,19 @@ Dispatcher.register(function (action) {
       break;
     case ActionTypes.CREATE_TODO:
       _todos.push(action.todo);
-      toastr.success('Todo Created');
+      toastr.success('Todo Created', 'CREATE SUCCESS');
       TodoStore.emitChange();
       break;
     case ActionTypes.UPDATE_TODO:
       var existingTodo = _.find(_todos, {_id: action.todo._id});
       var existingTodoIndex = _.indexOf(_todos, existingTodo);
       _todos.splice(existingTodoIndex, 1, action.todo);
-      toastr.info('Todo Updated');
+      toastr.info('Todo Updated', 'UPDATE SUCCESS');
       TodoStore.emitChange();
       break;
     case ActionTypes.DELETE_TODO:
       _.remove(_todos, {_id: action.todoId});
-      toastr.error('Todo Deleted...hooray...');
+      toastr.info('Todo Deleted...hooray...', 'DELETE SUCCESS');
       TodoStore.emitChange();
       break;
     default:
