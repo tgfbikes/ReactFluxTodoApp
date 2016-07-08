@@ -27,25 +27,21 @@ var TodoList = React.createClass({
 
   render: function () {
     var output;
+    
     var createTodoRow = function (todo) {
-      var getDescription = function () {
-        if (todo.completed) {
-          return (
-            <s>{todo.description}</s>
-          );
-        } else {
-          return (
-            <span>{todo.description}</span>
-          );
-        }
-      };
+      var tdClass = '';
+      var isDone = 'Mark as Done';
+      if (todo.completed) {
+        tdClass = 'todo-done';
+        isDone = 'Mark as Not Done';
+      }
       return (
         <tr key={todo._id}>
-          <td>{todo._id}</td>
-          <td><Link to={'/manage-todo/' + todo._id}>{todo.title}</Link></td>
-          <td>{getDescription()}</td>
+          <td className={tdClass}>{todo._id}</td>
+          <td className={tdClass}><Link to={'/manage-todo/' + todo._id}>{todo.title}</Link></td>
+          <td className={tdClass}>{todo.description}</td>
           <td><a href="#" onClick={this.deleteTodo.bind(this, todo)}>Delete</a></td>
-          <td><a href="#" onClick={this.updateTodo.bind(this, todo)}>Mark as Done</a></td>
+          <td><a href="#" onClick={this.updateTodo.bind(this, todo)}>{isDone}</a></td>
         </tr>
       );
     };

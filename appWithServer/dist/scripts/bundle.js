@@ -415,25 +415,21 @@ var TodoList = React.createClass({displayName: "TodoList",
 
   render: function () {
     var output;
+    
     var createTodoRow = function (todo) {
-      var getDescription = function () {
-        if (todo.completed) {
-          return (
-            React.createElement("s", null, todo.description)
-          );
-        } else {
-          return (
-            React.createElement("span", null, todo.description)
-          );
-        }
-      };
+      var tdClass = '';
+      var isDone = 'Mark as Done';
+      if (todo.completed) {
+        tdClass = 'todo-done';
+        isDone = 'Mark as Not Done';
+      }
       return (
         React.createElement("tr", {key: todo._id}, 
-          React.createElement("td", null, todo._id), 
-          React.createElement("td", null, React.createElement(Link, {to: '/manage-todo/' + todo._id}, todo.title)), 
-          React.createElement("td", null, getDescription()), 
+          React.createElement("td", {className: tdClass}, todo._id), 
+          React.createElement("td", {className: tdClass}, React.createElement(Link, {to: '/manage-todo/' + todo._id}, todo.title)), 
+          React.createElement("td", {className: tdClass}, todo.description), 
           React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.deleteTodo.bind(this, todo)}, "Delete")), 
-          React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.updateTodo.bind(this, todo)}, "Mark as Done"))
+          React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.updateTodo.bind(this, todo)}, isDone))
         )
       );
     };
