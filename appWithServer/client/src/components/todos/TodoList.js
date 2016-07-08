@@ -18,7 +18,6 @@ var TodoList = React.createClass({
       todo.completed = true;
     }
     TodoActionCreator.updateTodo(todo);
-    toastr.success('Todo Completed.');
   },
   
   deleteTodo: function (todo, event) {
