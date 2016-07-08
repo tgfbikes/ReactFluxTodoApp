@@ -12,42 +12,37 @@ var TodoList = React.createClass({
 
   updateTodo: function (todo, event) {
     event.preventDefault();
-    if (todo.completed) {
-      todo.completed = false;
-    } else {
-      todo.completed = true;
-    }
+    todo.completed ? todo.completed = false : todo.completed = true;
     TodoActionCreator.updateTodo(todo);
-    toastr.success('Todo Completed.');
   },
   
   deleteTodo: function (todo, event) {
     event.preventDefault();
     TodoActionCreator.deleteTodo(todo);
-    toastr.success('Todo Deleted...hooray...');
   },
 
   render: function () {
     var output;
+    
     var createTodoRow = function (todo) {
-      var getDescription = function () {
-        if (todo.completed) {
-          return (
-            <s>{todo.description}</s>
-          );
-        } else {
-          return (
-            <span>{todo.description}</span>
-          );
-        }
-      };
+      var tdClass = '';
+      var isDone = 'Mark as Done';
+      var todoTitle = todo.title;
+      var todoDescription = todo.description;
+      
+      if (todo.completed) {
+        tdClass = 'todo-done';
+        isDone = 'Mark as Not Done';
+        todoTitle = (<s>{todo.title}</s>);
+        todoDescription = (<s>{todo.description}</s>);
+      }
+      
       return (
         <tr key={todo._id}>
-          <td>{todo._id}</td>
-          <td><Link to={'/manage-todo/' + todo._id}>{todo.title}</Link></td>
-          <td>{getDescription()}</td>
+          <td className={tdClass}><Link to={'/manage-todo/' + todo._id}>{todoTitle}</Link></td>
+          <td className={tdClass}>{todoDescription}</td>
           <td><a href="#" onClick={this.deleteTodo.bind(this, todo)}>Delete</a></td>
-          <td><a href="#" onClick={this.updateTodo.bind(this, todo)}>Mark as Done</a></td>
+          <td><a href="#" onClick={this.updateTodo.bind(this, todo)}>{isDone}</a></td>
         </tr>
       );
     };
@@ -64,9 +59,10 @@ var TodoList = React.createClass({
         <table className="table">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Title</th>
               <th>Description</th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>

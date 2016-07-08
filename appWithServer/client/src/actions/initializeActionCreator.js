@@ -4,6 +4,7 @@
 var Dispatcher = require('../dispatcher/Dispatcher');
 var API = require('../helpers/api');
 var ActionTypes = require('../constants/actionTypes');
+var toastr = require('toastr');
 
 var InitializeActionCreator = {
   
@@ -18,6 +19,9 @@ var InitializeActionCreator = {
             todos: todos
           }
         });
+      })
+      .fail(function (xhr, status, err) {
+        toastr.error('Something went wrong', 'ERROR');
       });
   }
   

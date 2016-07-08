@@ -10,9 +10,6 @@ var ajax = function (url, data, type='POST') {
     contentType: 'application/json',
     type: type,
     data: JSON.stringify(data),
-  })
-  .fail(function (xhr, status, err) {
-    console.log('Get all todos failed!!!')
   });
 };
 
