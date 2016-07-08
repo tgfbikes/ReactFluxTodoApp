@@ -12,11 +12,7 @@ var TodoList = React.createClass({
 
   updateTodo: function (todo, event) {
     event.preventDefault();
-    if (todo.completed) {
-      todo.completed = false;
-    } else {
-      todo.completed = true;
-    }
+    todo.completed ? todo.completed = false : todo.completed = true;
     TodoActionCreator.updateTodo(todo);
   },
   
