@@ -7,7 +7,6 @@ var TodoForm = require('./TodoForm');
 var TodoActionCreator = require('../../actions/todoActionCreator');
 var TodoStore = require('../../stores/todoStore');
 var todoApi = require('../../mockApi/todoApi');
-var toastr = require('toastr');
 
 
 var ManageTodoPage = React.createClass({
@@ -85,7 +84,6 @@ var ManageTodoPage = React.createClass({
       TodoActionCreator.createTodo(this.state.todo);
     }
     
-    toastr.success('Todo Saved');
     browserHistory.push('/todo-page');
   },
   
