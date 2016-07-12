@@ -445,7 +445,14 @@ var TodoList = React.createClass({displayName: "TodoList",
           React.createElement("td", {className: tdClass}, React.createElement(Link, {to: '/manage-todo/' + todo._id}, todoTitle)), 
           React.createElement("td", {className: tdClass}, todoDescription), 
           React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.deleteTodo.bind(this, todo)}, "Delete")), 
-          React.createElement("td", null, React.createElement("a", {href: "#", onClick: this.updateTodo.bind(this, todo)}, isDone))
+          React.createElement("td", null, 
+            React.createElement("input", {
+              type: "checkbox", 
+              checked: todo.completed, 
+              onChange: this.updateTodo.bind(this, todo)}
+            )
+          )
+          /* <td><a href="#" onClick={this.updateTodo.bind(this, todo)}>{isDone}</a></td> */
         )
       );
     };

@@ -42,7 +42,14 @@ var TodoList = React.createClass({
           <td className={tdClass}><Link to={'/manage-todo/' + todo._id}>{todoTitle}</Link></td>
           <td className={tdClass}>{todoDescription}</td>
           <td><a href="#" onClick={this.deleteTodo.bind(this, todo)}>Delete</a></td>
-          <td><a href="#" onClick={this.updateTodo.bind(this, todo)}>{isDone}</a></td>
+          <td>
+            <input
+              type="checkbox"
+              checked={todo.completed}
+              onChange={this.updateTodo.bind(this, todo)}
+            />
+          </td>
+          {/* <td><a href="#" onClick={this.updateTodo.bind(this, todo)}>{isDone}</a></td> */}
         </tr>
       );
     };
