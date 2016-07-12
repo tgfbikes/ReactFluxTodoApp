@@ -2,9 +2,9 @@
 
 var React = require('react');
 var Link = require('react-router').Link;
-var TodoActionCreator = require('../../actions/todoActionCreator');
 var toastr = require('toastr');
-var TodoStore = require('../../stores/todoStore');
+var TodoActionCreator = require('../../actions/todoActionCreator');
+var CheckboxInput = require('../common/CheckboxInput');
 
 
 var TodoList = React.createClass({
@@ -26,13 +26,11 @@ var TodoList = React.createClass({
     
     var createTodoRow = function (todo) {
       var tdClass = '';
-      var isDone = 'Mark as Done';
       var todoTitle = todo.title;
       var todoDescription = todo.description;
       
       if (todo.completed) {
         tdClass = 'todo-done';
-        isDone = 'Mark as Not Done';
         todoTitle = (<s>{todo.title}</s>);
         todoDescription = (<s>{todo.description}</s>);
       }
@@ -43,13 +41,11 @@ var TodoList = React.createClass({
           <td className={tdClass}>{todoDescription}</td>
           <td><a href="#" onClick={this.deleteTodo.bind(this, todo)}>Delete</a></td>
           <td>
-            <input
-              type="checkbox"
+            <CheckboxInput
               checked={todo.completed}
-              onChange={this.updateTodo.bind(this, todo)}
+              updateTodo={this.updateTodo.bind(this, todo)}
             />
           </td>
-          {/* <td><a href="#" onClick={this.updateTodo.bind(this, todo)}>{isDone}</a></td> */}
         </tr>
       );
     };
