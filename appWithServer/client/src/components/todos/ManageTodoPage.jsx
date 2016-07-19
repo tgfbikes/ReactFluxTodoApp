@@ -1,9 +1,8 @@
 'use strict';
 
 var React = require('react');
-// var hashHistory = require('react-router').hashHistory;
 var browserHistory = require('react-router').browserHistory;
-var TodoForm = require('./TodoForm');
+var TodoForm = require('./TodoForm.jsx');
 var TodoActionCreator = require('../../actions/todoActionCreator');
 var TodoStore = require('../../stores/todoStore');
 var todoApi = require('../../mockApi/todoApi');
@@ -92,10 +91,10 @@ var ManageTodoPage = React.createClass({
       <div>
         <h1>Manage Todos</h1>
         <TodoForm 
-          todo={this.state.todo}
-          onChange={this.setTodoState}
-          onSave={this.saveTodo}
-          errors={this.state.errors}
+            todo={this.state.todo}
+            onChange={this.setTodoState}
+            onSave={this.saveTodo}
+            errors={this.state.errors}
         />
       </div>
     );

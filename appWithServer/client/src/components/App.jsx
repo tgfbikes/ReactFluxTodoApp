@@ -2,7 +2,7 @@
 
 var React = require('react');
 var Router = require('react-router').Router;
-var Header = require('./common/Header');
+var Header = require('./common/Header.jsx');
 
 var App = React.createClass({
   

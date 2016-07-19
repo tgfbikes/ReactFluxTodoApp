@@ -4,7 +4,7 @@ var React = require('react');
 var Link = require('react-router').Link;
 var toastr = require('toastr');
 var TodoActionCreator = require('../../actions/todoActionCreator');
-var CheckboxInput = require('../common/CheckboxInput');
+var CheckboxInput = require('../common/CheckboxInput.jsx');
 
 
 var TodoList = React.createClass({

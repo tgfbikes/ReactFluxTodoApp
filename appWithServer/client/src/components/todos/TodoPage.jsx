@@ -2,11 +2,11 @@
 
 var React = require('react');
 var Link = require('react-router').Link;
-var TodoList = require('./TodoList');
+var TodoList = require('./TodoList.jsx');
 var TodoStore = require('../../stores/todoStore');
 
 
-var Todos = React.createClass({
+var TodoPage = React.createClass({
 
   getInitialState: function () {
     return {
@@ -37,12 +37,12 @@ var Todos = React.createClass({
         <h2>Things we need to get done</h2>
         <Link className="btn btn-success btn-sm" to="/manage-todo">Add a Todo</Link>
         <TodoList
-          todos={this.state.todos}
-          deleteTodo={this.deleteTodo}
+            todos={this.state.todos}
+            deleteTodo={this.deleteTodo}
         />
       </div>
     );
   }
 });
 
-module.exports = Todos;
+module.exports = TodoPage;

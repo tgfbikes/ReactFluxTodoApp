@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react');
-var TextInput = require('../common/TextInput');
+var TextInput = require('../common/TextInput.jsx');
 
 
 var TodoForm= React.createClass({

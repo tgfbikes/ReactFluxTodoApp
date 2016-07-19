@@ -16,6 +16,7 @@ var Header = React.createClass({
             <li><Link to="/">Home</Link></li>
             <li><Link to="/todo-page">Todos</Link></li>
             <li><Link to="/about-page">About</Link></li>
+            <li><Link to="/manage-todo">Add a Todo</Link></li>
           </ul>
         </div>
       </nav>
