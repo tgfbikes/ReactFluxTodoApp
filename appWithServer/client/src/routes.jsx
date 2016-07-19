@@ -8,6 +8,7 @@ var HomePage = require('./components/HomePage.jsx');
 var TodoPage = require('./components/todos/TodoPage.jsx');
 var AboutPage = require('./components/about/AboutPage.jsx');
 var ManageTodoPage = require('./components/todos/ManageTodoPage.jsx');
+var UserSignIn = require('./components/UserSignIn.jsx');
 var NotFoundPage = require('./components/404NotFound.jsx');
 
 var routes = (
@@ -17,6 +18,7 @@ var routes = (
     <Route path="/about-page" component={AboutPage} />
     <Route path="/manage-todo" component={ManageTodoPage} />
     <Route path="/manage-todo/:id" component={ManageTodoPage} />
+    <Route path="/user-signin" component={UserSignIn} />
     <Route path="*" component={NotFoundPage} />
   </Route>
 );
