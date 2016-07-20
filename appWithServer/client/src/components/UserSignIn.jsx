@@ -4,6 +4,7 @@ var React = require('react');
 var TextInput = require('./common/TextInput.jsx');
 var EmailInput = require('./common/EmailInput.jsx');
 var PasswordInput = require('./common/PasswordInput.jsx');
+var UserActionCreator = require('../actions/userActionCreator');
 
 
 var UserSignIn = React.createClass({
@@ -36,11 +37,11 @@ var UserSignIn = React.createClass({
     event.preventDefault();
 
     if (!this.isFormValid()) {
-      console.log('there is an error');
       return;
     }
 
-    console.log('no errors');
+    UserActionCreator.createUser(this.state.user)
+
   },
 
   isNameValid: function () {
