@@ -10,7 +10,6 @@ var TextInput = React.createClass({
     if (this.props.error && this.props.error.length > 0) {
       wrapperClass += ' ' + 'has-error';
     }
-    
     return (
       <div className={wrapperClass}>
         <label htmlFor={this.props.name}>{this.props.name}</label>
@@ -23,6 +22,7 @@ var TextInput = React.createClass({
             ref={this.props.name}
             value={this.props.value}
             onChange={this.props.onChange}
+            onBlur={this.props.onBlur ? this.props.onBlur : null}
            />
           <div className="input">{this.props.error}</div>
         </div>

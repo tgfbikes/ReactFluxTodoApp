@@ -31,29 +31,49 @@ var UserSignIn = React.createClass({
     });
   },
 
+  saveUser: function (event) {
+    event.preventDefault();
+  },
+
+  isName: function () {
+    console.log('isName');
+  },
+
+  isEmail: function () {
+    console.log('email');
+  },
+
+  isPassword: function () {
+    console.log('password');
+  },
+
+
   render: function () {
     return (
       <div>
         <h1>Sign In</h1>
-        <form>
+        <form onSubmit={this.saveUser}>
           <TextInput
-              name="name"
-              placeholder="Name"
-              autoFocus={true}
-              value={this.state.user.name}
-              onChange={this.setUserState}
+            name="name"
+            placeholder="Name"
+            autoFocus={true}
+            value={this.state.user.name}
+            onChange={this.setUserState}
+            onBlur={this.isName}
           />
           <EmailInput
-              name="email"
-              placeholder="youremail@example.com"
-              value={this.state.user.email}
-              onChange={this.setUserState}
+            name="email"
+            placeholder="youremail@example.com"
+            value={this.state.user.email}
+            onChange={this.setUserState}
+            onBlur={this.isEmail}
           />
           <PasswordInput
-              name="password"
-              placeholder="Password"
-              value={this.state.user.password}
-              onChange={this.setUserState}
+            name="password"
+            placeholder="Password"
+            value={this.state.user.password}
+            onChange={this.setUserState}
+            onBlur={this.isPassword}
           />
         </form>
       </div>
