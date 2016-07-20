@@ -11,6 +11,7 @@ var UserSignIn = React.createClass({
   getInitialState: function () {
     return {
       dirty: false,
+      errors: {},
       user: {
         name: '',
         email: '',
@@ -33,20 +34,47 @@ var UserSignIn = React.createClass({
 
   saveUser: function (event) {
     event.preventDefault();
+
+    if (!this.isValid) {
+      console.log('there is an error');
+      return;
+    }
+
+    console.log('no errors');
   },
 
-  isName: function () {
-    console.log('isName');
-  },
+  isValid: function (event) {
+    var formIsValid = true;
+    var newErrors = Object.assign({}, this.state.errors);
 
-  isEmail: function () {
-    console.log('email');
-  },
+    switch (event.target.name) {
+      case 'name':
+        if (this.state.user.name.length < 1) {
+          newErrors.name = 'Name is required and cannot be blank';
+          formIsValid = false;
+        }
+        break;
+      case 'email':
+        if (this.state.user.email.length < 1) {
+          newErrors.email = 'Email is required and cannot be blank';
+          formIsValid = false;
+        }
+        break;
+      case 'password':
+        if (this.state.user.password.length < 1) {
+          newErrors.password = 'Password is required and cannot be blank';
+          formIsValid = false;
+        }
+        break;
+      default:
+    }
 
-  isPassword: function () {
-    console.log('password');
-  },
+    this.setState({
+      errors: newErrors
+    });
 
+    return formIsValid;
+  },
 
   render: function () {
     return (
@@ -58,22 +86,25 @@ var UserSignIn = React.createClass({
             placeholder="Name"
             autoFocus={true}
             value={this.state.user.name}
+            error={this.state.errors.name}
             onChange={this.setUserState}
-            onBlur={this.isName}
+            onBlur={this.isValid}
           />
           <EmailInput
             name="email"
             placeholder="youremail@example.com"
             value={this.state.user.email}
+            error={this.state.errors.email}
             onChange={this.setUserState}
-            onBlur={this.isEmail}
+            onBlur={this.isValid}
           />
           <PasswordInput
             name="password"
             placeholder="Password"
             value={this.state.user.password}
+            error={this.state.errors.password}
             onChange={this.setUserState}
-            onBlur={this.isPassword}
+            onBlur={this.isValid}
           />
         </form>
       </div>
