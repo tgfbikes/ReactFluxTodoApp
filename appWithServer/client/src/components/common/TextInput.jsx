@@ -16,12 +16,13 @@ var TextInput = React.createClass({
         <label htmlFor={this.props.name}>{this.props.name}</label>
         <div className="field">
           <input type="text"
-             name={this.props.name}
-             className="form-control"
-             placeholder={this.props.placeholder}
-             ref={this.props.name}
-             value={this.props.value}
-             onChange={this.props.onChange}
+            name={this.props.name}
+            className="form-control"
+            placeholder={this.props.placeholder}
+            autoFocus={this.props.autoFocus ? this.props.autoFocus : false}
+            ref={this.props.name}
+            value={this.props.value}
+            onChange={this.props.onChange}
            />
           <div className="input">{this.props.error}</div>
         </div>

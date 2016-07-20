@@ -39,6 +39,7 @@ var UserSignIn = React.createClass({
           <TextInput
               name="name"
               placeholder="Name"
+              autoFocus={true}
               value={this.state.user.name}
               onChange={this.setUserState}
           />
