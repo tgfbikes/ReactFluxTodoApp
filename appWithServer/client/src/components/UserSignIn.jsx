@@ -35,7 +35,7 @@ var UserSignIn = React.createClass({
   saveUser: function (event) {
     event.preventDefault();
 
-    if (!this.isValid) {
+    if (!this.isFormValid()) {
       console.log('there is an error');
       return;
     }
@@ -43,35 +43,60 @@ var UserSignIn = React.createClass({
     console.log('no errors');
   },
 
-  isValid: function (event) {
-    var formIsValid = true;
+  isNameValid: function () {
     var newErrors = Object.assign({}, this.state.errors);
 
-    switch (event.target.name) {
-      case 'name':
-        if (this.state.user.name.length < 1) {
-          newErrors.name = 'Name is required and cannot be blank';
-          formIsValid = false;
-        }
-        break;
-      case 'email':
-        if (this.state.user.email.length < 1) {
-          newErrors.email = 'Email is required and cannot be blank';
-          formIsValid = false;
-        }
-        break;
-      case 'password':
-        if (this.state.user.password.length < 1) {
-          newErrors.password = 'Password is required and cannot be blank';
-          formIsValid = false;
-        }
-        break;
-      default:
+    if (this.state.user.name.length < 1) {
+      newErrors.name = 'Name is required and cannot be blank';
+    } else {
+      newErrors.name = '';
     }
-
     this.setState({
       errors: newErrors
     });
+  },
+
+  isEmailValid: function () {
+    var emailRE = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var newErrors = Object.assign({}, this.state.errors);
+
+    if (!emailRE.test(this.state.user.email)) {
+      newErrors.email = 'This is not a valid email';
+    } else {
+      newErrors.email = '';
+    }
+    this.setState({
+      errors: newErrors
+    });
+  },
+
+  isPasswordValid: function () {
+    var passwordRE = /[A-Za-z0-9]{8,}/;
+    var newErrors = Object.assign({}, this.state.errors);
+
+    if (!passwordRE.test(this.state.user.password)) {
+      newErrors.password = 'Password must be 8 characters or more';
+    } else {
+      newErrors.password = '';
+    }
+    this.setState({
+      errors: newErrors
+    });
+  },
+
+  isFormValid: function () {
+    var formIsValid = true;
+    var newErrors = Object.assign({}, this.state.errors);
+
+    for (var key in this.state.user) {
+      if (this.state.user[key].length < 1) {
+        newErrors[key] = 'Field cannot be blank';
+        formIsValid = false;
+        this.setState({
+          errors: newErrors
+        });
+      }
+    }
 
     return formIsValid;
   },
@@ -88,7 +113,7 @@ var UserSignIn = React.createClass({
             value={this.state.user.name}
             error={this.state.errors.name}
             onChange={this.setUserState}
-            onBlur={this.isValid}
+            onBlur={this.isNameValid}
           />
           <EmailInput
             name="email"
@@ -96,7 +121,7 @@ var UserSignIn = React.createClass({
             value={this.state.user.email}
             error={this.state.errors.email}
             onChange={this.setUserState}
-            onBlur={this.isValid}
+            onBlur={this.isEmailValid}
           />
           <PasswordInput
             name="password"
@@ -104,8 +129,9 @@ var UserSignIn = React.createClass({
             value={this.state.user.password}
             error={this.state.errors.password}
             onChange={this.setUserState}
-            onBlur={this.isValid}
+            onBlur={this.isPasswordValid}
           />
+          <input className="btn btn-default" type="submit" value="Sign Up"/>
         </form>
       </div>
     );
