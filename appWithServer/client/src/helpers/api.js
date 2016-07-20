@@ -6,7 +6,8 @@ module.exports = {
   getAllTodos: getAllTodos,
   createTodo: createTodo,
   deleteTodo: deleteTodo,
-  updateTodo: updateTodo
+  updateTodo: updateTodo,
+  createUser: createUser
 };
 
 function getAllTodos () {
@@ -38,4 +39,11 @@ function updateTodo(todo) {
   var method = 'PUT';
 
   return ajax(url, data, method);
+}
+
+function createUser (user) {
+  var url = '/users';
+  var data = user;
+
+  return ajax(url, data);
 }
