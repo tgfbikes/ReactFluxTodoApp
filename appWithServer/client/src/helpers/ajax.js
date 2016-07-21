@@ -10,6 +10,12 @@ var ajax = function (url, data, type='POST') {
     contentType: 'application/json',
     type: type,
     data: JSON.stringify(data),
+    headers: {
+      Authorization: {
+        name: '',
+        password: ''
+      }
+    }
   });
 };
 

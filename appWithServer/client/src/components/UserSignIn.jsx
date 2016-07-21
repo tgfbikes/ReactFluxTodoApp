@@ -40,7 +40,7 @@ var UserSignIn = React.createClass({
       return;
     }
 
-    UserActionCreator.createUser(this.state.user)
+    UserActionCreator.createUser(this.state.user);
 
   },
 
