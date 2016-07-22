@@ -10,7 +10,7 @@ var CHANGE_EVENT = 'change';
 var _user = {
   name: '',
   password: ''
-}
+};
 
 function _saveUserToLocalStorage (user) {
     _user = Object.assign({}, user);
