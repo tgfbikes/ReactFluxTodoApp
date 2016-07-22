@@ -6,5 +6,6 @@ module.exports = {
   CREATE_TODO: 'create todo',
   UPDATE_TODO: 'update todo',
   DELETE_TODO: 'delete todo',
-  CREATE_USER: 'create user'
+  CREATE_USER: 'create user',
+  DELTE_USER: 'delete user'
 };
