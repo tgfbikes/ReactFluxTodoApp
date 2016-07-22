@@ -6,14 +6,13 @@ var UserStore = require('../stores/userStore');
 var ajax = function (url, data, type='POST') {
 
     var authString;
+    var user = UserStore.getUser();
 
-    if (UserStore.getUser()) {
+    if (user) {
         authString = 'Basic ' + btoa(user.name + ':' + user.password);
     } else {
         authString = 'Basic ' + btoa('falseuser:falsepassword');
     }
-
-  var user = UserStore.getUser();
 
   return $.ajax({
     url: 'http://localhost:9005' + url,
