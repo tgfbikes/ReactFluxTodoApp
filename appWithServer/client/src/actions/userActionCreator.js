@@ -8,11 +8,12 @@ var SHA256 = require('crypto-js/sha256');
 
 var UserActionCreator = {
   createUser: function (user) {
-    console.log(user);
     var newUserPromise = API.createUser(user);
+    var userPasswordHash = SHA256(user.password);
 
     newUserPromise
       .done(function (newUser) {
+        newUser.password = userPasswordHash;
         Dispatcher.dispatch({
           actionType: ActionTypes.CREATE_USER,
           user: newUser
